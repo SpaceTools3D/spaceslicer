@@ -5485,6 +5485,13 @@ std::string GUI_App::handle_web_request(std::string cmd)
             else if (command_str.compare("homepage_openproject") == 0) {
                 this->request_open_project({});
             }
+            // SpaceSlicer home page: sidebar shortcuts
+            else if (command_str.compare("homepage_open_preferences") == 0) {
+                this->open_preferences();
+            }
+            else if (command_str.compare("homepage_goto_device") == 0) {
+                if (mainframe) mainframe->select_tab(wxString(TAB_ID_MONITOR));
+            }
             else if (command_str.compare("homepage_open_cloud") == 0) {
                 this->open_orca_cloud();
             }
