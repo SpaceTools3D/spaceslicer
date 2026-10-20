@@ -38,8 +38,8 @@
   --plugin-status-warn-bg: rgba(199, 122, 22, 0.12);
   --plugin-status-inactive-bg: #edf1f5;
   --plugin-status-inactive-text: #44505c;
-  --plugin-source-mine-bg: rgba(0, 137, 123, 0.12);
-  --plugin-source-mine-text: #00897b;
+  --plugin-source-mine-bg: rgba(106, 63, 214, 0.12);
+  --plugin-source-mine-text: #6A3FD6;
   --plugin-source-neutral-bg: #edf1f5;
   --plugin-source-neutral-text: #44505c;
   --plugin-source-subscribed-bg: rgba(37, 99, 170, 0.12);
@@ -65,12 +65,12 @@
 }
 
 :root[data-orca-theme="dark"] {
-  /* The app-injected border (var(--orca-border) ≈ #36363B in dark) sits almost on top of
+  /* The app-injected border (var(--orca-border) ≈ #231E2E in dark) sits almost on top of
      the dark panels; lift the border roles a touch so dividers/outlines stay visible. */
-  --border: #4a4a51;
-  --border-strong: #4a4a51;
-  --border-soft: #4a4a51;
-  --col-sep: #4a4a51;
+  --border: #3D3452;
+  --border-strong: #3D3452;
+  --border-soft: #3D3452;
+  --col-sep: #3D3452;
   --row-hover: #2b3340;
   --row-selected: #244945;
   --plugin-link-text: #5eead4;
@@ -81,11 +81,11 @@
   --plugin-status-danger-bg: rgba(255, 123, 114, 0.16);
   --plugin-status-ok-bg: rgba(55, 200, 113, 0.16);
   --plugin-status-warn-bg: rgba(240, 180, 90, 0.18);
-  --plugin-status-inactive-bg: #36363b;
+  --plugin-status-inactive-bg: #231E2E;
   --plugin-status-inactive-text: #c7ccd2;
-  --plugin-source-mine-bg: rgba(0, 150, 136, 0.18);
+  --plugin-source-mine-bg: rgba(123, 79, 224, 0.18);
   --plugin-source-mine-text: #8de5d6;
-  --plugin-source-neutral-bg: #36363b;
+  --plugin-source-neutral-bg: #231E2E;
   --plugin-source-neutral-text: #c7ccd2;
   --plugin-source-subscribed-bg: rgba(88, 166, 255, 0.18);
   --plugin-source-subscribed-text: #8fc0f0;

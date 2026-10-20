@@ -80,7 +80,7 @@ MediaFilePanel::MediaFilePanel(wxWindow * parent)
     for (auto b : {m_button_year, m_button_month, m_button_all}) {
         b->SetBackgroundColor(StateColor());
         b->SetTextColor(StateColor(
-            std::make_pair(0x3B4446, (int) StateColor::Checked),
+            std::make_pair(0x1B1430, (int) StateColor::Checked),
             std::make_pair(*wxLIGHT_GREY, (int) StateColor::Hovered),
             std::make_pair(0xABACAC, (int) StateColor::Normal)
         ));
@@ -144,11 +144,11 @@ MediaFilePanel::MediaFilePanel(wxWindow * parent)
     m_button_delete->SetBorderColorNormal(wxColor("#FF6F00"));
     m_button_delete->SetTextColorNormal(wxColor("#FF6F00"));
     m_button_management->SetBorderWidth(0);
-    m_button_management->SetBackgroundColorNormal(wxColor("#009688"));
+    m_button_management->SetBackgroundColorNormal(wxColor("#7B4FE0"));
     m_button_management->SetTextColorNormal(*wxWHITE);
     m_button_management->Enable(false);
     m_button_refresh->SetBorderWidth(0);
-    m_button_refresh->SetBackgroundColorNormal(wxColor("#009688"));
+    m_button_refresh->SetBackgroundColorNormal(wxColor("#7B4FE0"));
     m_button_refresh->SetTextColorNormal(*wxWHITE);
     m_button_refresh->Enable(false);
 

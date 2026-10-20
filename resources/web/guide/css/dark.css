@@ -6,7 +6,7 @@
 
 body
 {
-	background-color:#2D2D31; /* ORCA match background color */
+	background-color:#1C1826; /* ORCA match background color */
 	color: #efeff0;
 }
 
@@ -20,7 +20,7 @@ body
 
 #Title div
 {
-	color: #009688;
+	color: #7B4FE0;
 }
 
 /*-------Text------*/
@@ -38,19 +38,19 @@ body
 /*---Policy---*/
 .TextArea1
 {
-	background-color: #4A4A51;
+	background-color: #3D3452;
 	color: #BEBEC0;
 }
 
 /*----Region---*/
 .RegionItem:hover
 {
-	background-color:#4C4C55;
+	background-color:#352D47;
 }
 
 .RegionSelected:hover
 {
-	background-color:#009688;
+	background-color:#7B4FE0;
 	color: #fff;	
 }
 

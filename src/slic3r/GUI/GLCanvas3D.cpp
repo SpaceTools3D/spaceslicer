@@ -187,7 +187,7 @@ using namespace std::string_view_literals;
 static constexpr const float TRACKBALLSIZE = 0.8f;
 
 static Slic3r::ColorRGBA DEFAULT_BG_LIGHT_COLOR      = { 0.906f, 0.906f, 0.906f, 1.0f };
-static Slic3r::ColorRGBA DEFAULT_BG_LIGHT_COLOR_DARK = { 0.329f, 0.329f, 0.353f, 1.0f };
+static Slic3r::ColorRGBA DEFAULT_BG_LIGHT_COLOR_DARK = { 0.180f, 0.161f, 0.235f, 1.0f }; // SpaceSlicer: deep violet night
 static Slic3r::ColorRGBA ERROR_BG_LIGHT_COLOR        = { 0.753f, 0.192f, 0.039f, 1.0f };
 static Slic3r::ColorRGBA ERROR_BG_LIGHT_COLOR_DARK   = { 0.753f, 0.192f, 0.039f, 1.0f };
 
@@ -430,7 +430,7 @@ void GLCanvas3D::LayersEditing::render_variable_layer_height_dialog(GLCanvas3D& 
     ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(238 / 255.0f, 238 / 255.0f, 238 / 255.0f, 0.00f));
     ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(238 / 255.0f, 238 / 255.0f, 238 / 255.0f, 0.00f));
     ImGui::PushStyleColor(ImGuiCol_SliderGrab, ImVec4(0.81f, 0.81f, 0.81f, 1.0f));
-    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.00f, 0.59f, 0.53f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_SliderGrabActive, ImVec4(0.48f, 0.31f, 0.88f, 1.00f));
     if(ImGui::BBLSliderScalar("##radius_slider", ImGuiDataType_S32, &radius, &v_min, &v_max)){
         radius = std::clamp(radius, 1, 10);
         m_smooth_params.radius = (unsigned int)radius;
@@ -441,9 +441,9 @@ void GLCanvas3D::LayersEditing::render_variable_layer_height_dialog(GLCanvas3D& 
     input_align = std::max(input_align, ImGui::GetCursorPosX());
     ImGui::SetCursorPosX(input_align);
     ImGui::PushItemWidth(input_box_width);
-    ImGui::PushStyleColor(ImGuiCol_BorderActive, ImVec4(0.00f, 0.59f, 0.53f, 1.00f));
-    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0.00f, 0.59f, 0.53f, 0.00f));
-    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(0.00f, 0.59f, 0.53f, 0.00f));
+    ImGui::PushStyleColor(ImGuiCol_BorderActive, ImVec4(0.48f, 0.31f, 0.88f, 1.00f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0.48f, 0.31f, 0.88f, 0.00f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(0.48f, 0.31f, 0.88f, 0.00f));
     ImGui::BBLDragScalar("##radius_input", ImGuiDataType_S32, &radius, 1, &v_min, &v_max);
     ImGui::PopStyleColor(3);
 
@@ -10478,7 +10478,7 @@ void GLCanvas3D::_render_imgui_select_plate_toolbar()
             text_bottom = std::to_string(sliced_plates_cnt) + " / " + std::to_string(total_plates_cnt);
             ImVec2 bar_fg_end = ImVec2(bar_bg_bgn.x + bar_total_perc_pos + bar_current_perc_pos, bar_bg_end.y);
             ImGui::GetWindowDrawList()->AddRectFilled(bar_bg_bgn, bar_bg_end, IM_COL32(128, 128, 128, 255), bar_size.y); // BAR BACKGROUND
-            ImGui::GetWindowDrawList()->AddRectFilled(bar_bg_bgn, bar_fg_end, IM_COL32(0, 150, 136, 255),   bar_size.y); // BAR PROGRESS
+            ImGui::GetWindowDrawList()->AddRectFilled(bar_bg_bgn, bar_fg_end, IM_COL32(123, 79, 224, 255),   bar_size.y); // BAR PROGRESS
         }
         else if (all_plates_stats_item->slice_state == IMToolbarItem::SliceState::SLICE_FAILED) {
             text_top    = _u8L("Failed");

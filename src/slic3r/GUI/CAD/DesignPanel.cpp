@@ -202,8 +202,8 @@ static const DpToken kDpTokens[TokCount] = {
     { wxColour(0x35,0x35,0x37), wxColour(0xC8,0xC8,0xC8) },   // control text
     { wxColour(0x2C,0x2C,0x2E), wxColour(0xE0,0xE0,0xE0) },   // list item text
     { wxColour(0xA0,0xA0,0xA2), wxColour(0x80,0x80,0x80) },   // dimmed list item
-    // Prepare's control-outline grey, sampled from its sidebar: #DBDBDB on light, #4A4A51 on the
-    // #2D2D31 dark panel. Every framed thing in Design uses this so the tab matches.
+    // Prepare's control-outline grey, sampled from its sidebar: #DBDBDB on light, #3D3452 on the
+    // #1C1826 dark panel. Every framed thing in Design uses this so the tab matches.
     { wxColour(0xDB,0xDB,0xDB), wxColour(0x4A,0x4A,0x51) },
 };
 static bool     dp_dark()         { return wxGetApp().dark_mode(); }
@@ -305,7 +305,7 @@ static wxString sketch_plane_prompt()
     return _L("Click a reference plane or a flat face to sketch on it — Esc cancels");
 }
 
-// Prepare outlines every numeric field (rounded, #4A4A51 on dark). wxSpinCtrlDouble is a
+// Prepare outlines every numeric field (rounded, #3D3452 on dark). wxSpinCtrlDouble is a
 // native GTK control that cannot draw that, and Orca's own SpinInput is int-only — it would
 // silently truncate a 2.5 mm radius. So the double spin keeps its arrows and validation and
 // sits inside an Orca StaticBox that supplies the frame. spin_frame() returns that box, which
@@ -446,8 +446,8 @@ DesignPanel::DesignPanel(wxWindow* parent)
     m_toolbar = new wxScrolledWindow(this, wxID_ANY);
     m_toolbar->SetScrollRate(15, 0);
     m_toolbar->ShowScrollbars(wxSHOW_SB_DEFAULT, wxSHOW_SB_NEVER);
-    // Theme-aware tool ribbon: dark uses Orca's elevated surface (#36363C / hover
-    // #4D4D54); light maps onto the app's light chrome so the strip follows the theme.
+    // Theme-aware tool ribbon: dark uses Orca's elevated surface (#241F30 / hover
+    // #3B3251); light maps onto the app's light chrome so the strip follows the theme.
     m_toolbar->SetBackgroundColour(dp_ribbon_bg());
 
     auto icon_btn = [this](const char* icon, const wxString& tip) {
