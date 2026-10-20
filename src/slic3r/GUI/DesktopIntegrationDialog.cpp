@@ -349,7 +349,7 @@ void DesktopIntegrationDialog::perform_desktop_integration()
             // Write slicer desktop file
             std::string desktop_file = GUI::format(
                 "[Desktop Entry]\n"
-                "Name=OrcaSlicer%1%\n"
+                "Name=" SLIC3R_APP_NAME "%1%\n"
                 "GenericName=3D Printing Software\n"
                 "Icon=OrcaSlicer%2%\n"
                 "Exec=\"%3%\" %%F\n"
@@ -554,7 +554,7 @@ void DesktopIntegrationDialog::perform_downloader_desktop_integration(std::strin
 
     std::string desktop_file_downloader = GUI::format(
         "[Desktop Entry]\n"
-        "Name=OrcaSlicer URL Protocol %1% %2%\n"
+        "Name=" SLIC3R_APP_NAME " URL Protocol %1% %2%\n"
         "Exec=%3% %%u\n"
         "Terminal=false\n"
         "Type=Application\n"
