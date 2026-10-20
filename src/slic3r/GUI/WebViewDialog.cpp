@@ -26,6 +26,7 @@
 #include <string>
 #include <nlohmann/json.hpp>
 #include <functional>
+#include <initializer_list>
 #include <cstddef>
 #include <wx/dialog.h>
 #include <wx/sizer.h>
@@ -426,10 +427,12 @@ void WebViewPanel::OnSpaceToolsWebViewEvent(wxWebViewEvent& evt)
     const auto type = evt.GetEventType();
     const wxString url = evt.GetURL();
     const wxString origin = http_origin_of(url);
-    if (type == wxEVT_WEBVIEW_NAVIGATING && cloud_navigation_is_top_level(evt)) {
+    if (type == wxEVT_WEBVIEW_NAVIGATING) {
         if (origin != "https://spacetools3d.com" && url != "about:blank") {
             evt.Veto();
-            if (origin.StartsWith("https://"))
+            // WebKitGTK cannot identify every main-frame redirect. Reject off-site
+            // frames/redirects too; only explicit top-level links leave the app.
+            if (origin.StartsWith("https://") && cloud_navigation_is_top_level(evt))
                 open_cloud_url_externally(url);
         }
     } else if (type == wxEVT_WEBVIEW_NEWWINDOW) {
