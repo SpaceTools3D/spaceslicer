@@ -58,7 +58,8 @@ using namespace nlohmann;
 
 namespace Slic3r {
 
-static const std::string VERSION_CHECK_URL = "https://check-version.orcaslicer.com/latest";
+// SpaceSlicer: new versions come from the SpaceSlicer GitHub releases (same JSON shape the checker already parses).
+static const std::string VERSION_CHECK_URL = "https://api.github.com/repos/SpaceTools3D/spaceslicer/releases";
 static const std::string PROFILE_UPDATE_URL = "https://check-version.orcaslicer.com/profile";
 
 constexpr const char* CONFIG_ORCA_UPDATER_URL = "orca_updater_url";

@@ -6,13 +6,13 @@ PRODUCTVERSION @SLIC3R_VERSION@
  {
   BLOCK "040904E4"
   {
-   VALUE "CompanyName", "SoftFever"
+   VALUE "CompanyName", "SpaceTools3D"
    VALUE "FileDescription", "@SLIC3R_APP_NAME@"
    VALUE "FileVersion", "@SLIC3R_BUILD_ID@"
    VALUE "ProductName", "@SLIC3R_APP_NAME@"
    VALUE "ProductVersion", "@SLIC3R_BUILD_ID@"
    VALUE "InternalName", "@SLIC3R_APP_NAME@"
-   VALUE "LegalCopyright", ""
+   VALUE "LegalCopyright", "Based on OrcaSlicer, AGPL-3.0"
    VALUE "OriginalFilename", "orca-slicer.exe"
   }
  }

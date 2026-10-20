@@ -1,3 +1,18 @@
+# SpaceSlicer
+
+**SpaceSlicer** is the 3D-printing slicer of [SpaceTools3D](https://spacetools3d.com). It is a fork of
+[OrcaSlicer](https://github.com/OrcaSlicer/OrcaSlicer) (itself based on Bambu Studio, PrusaSlicer and Slic3r) and is
+distributed under the same license, the **GNU Affero General Public License v3.0** (see `LICENSE.txt`).
+All credit for the slicing engine and the original application goes to the OrcaSlicer, Bambu Studio, PrusaSlicer
+and Slic3r authors. "OrcaSlicer" is a name of its respective owners; SpaceSlicer is not affiliated with or endorsed by them.
+
+Downloads: see [Releases](https://github.com/SpaceTools3D/spaceslicer/releases) and the build artifacts of the
+[Build all](https://github.com/SpaceTools3D/spaceslicer/actions/workflows/build_all.yml) workflow.
+
+---
+
+The original OrcaSlicer README follows.
+
 <div align="center">
 
 <picture>
