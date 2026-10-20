@@ -1,151 +1,22 @@
-body
-{
-	background-color:#15111E;
-}
-
-*
-{
-	border-color: #2E2740;
-}
-
-
-.TextS1
-{
-	color:#efeff0;
-}
-
-.TextS2
-{
-	color:#B3B3B5;
-}
-
-.ZScrol::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
-    background-color: #939594;
-}
-
-.ZScrol::-webkit-scrollbar-track {/*滚动条里面轨道*/
-        background: #161817;
-}
-
-
-
-
-/*----Left Menu Button----*/
-.BtnItem
-{
-	color:#B3B3B5;
-}
-
-.BtnItem:hover
-{
-	color: #efeff0;
-	background-color: var(--row-hover);
-}
-
-.BtnItem:hover .LeftIcon
-{
-	filter: brightness(300%);
-}
-
-.BtnItemSelected
-{
-	color: #efeff0;
-	background-color: var(--row-hover);
-}
-
-.BtnItemSelected .LeftIcon
-{
-	filter: brightness(300%);
-}
-
-/*-----Right Top MenuBtn-----*/
-.MenuItem:hover
-{
-	border-color: #5B35C4;
-	background-color: #2E2347;
-}
-
-.FileImg
-{
-	background-color: #241F30; /*ORCA use darker color for dark theme for thumbnails*/
-}
-
-#recnet_context_menu
-{
-	color: #efeff0;
-	background-color:#15111E;
-	border: 0px;
-	box-shadow: 0px 0px 3px #DCDCDC;
-}
-
-.CT_Item:hover
-{
-	background-color:#5B35C4; /*ORCA color*/
-}
-
-/*----User Manual------*/
-.UG_DESC
-{
-	color:#818183;
-}
-
-/*---Staff PIck----*/
-#HotModel_Swiper
-{
-	
-}
-
-.HotModel_NameText
-{
-	height: 32px;
-}
-
-.HotModelPiece
-{
-	border: 1px solid #352D47;
-	box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.04);
-	background-color: #352D47;
-}
-
-#HotModel_RIGHT_Title
-{
-	color: #818183;
-}
-
-.swiper
-{
-    --swiper-navigation-color: #EFEFF0;/* 单独设置按钮颜色 */
-}
-
-.swiper-button-prev
-{
-	background: rgba(54, 54, 60, 0.88);
-    border: 1px solid rgba(129, 129, 131, 0.64);
-}
-
-.swiper-button-next
-{
-	background: rgba(54, 54, 60, 0.88);
-    border: 1px solid rgba(129, 129, 131, 0.64);
-}
-
-/*--- Account rows and account menu ---*/
+/*---- SpaceSlicer home page, dark mode: only the tokens of home.css change. ----*/
 :root
 {
-	--row-hover            : #2E2347;
-	--warn-color           : #F07E4A;
-	--account-avatar-bg    : #3A3A40;
-	--account-avatar-glyph : #7E8785;
-	--account-surface      : #231E2E;
-	--account-name         : #EFEFF0;
-	--account-meta         : #949494;
-	--account-border       : #3D3452;
-	--account-divider      : #3A3A42;
-	--account-action       : #9A6FF0;
-	--account-danger       : #FF6A6A;
-	--account-danger-bg    : rgba(225, 71, 71, 0.16);
-	--account-warn-bg      : rgba(240, 126, 74, 0.16);  /*----var(--warn-color) at 16%----*/
-	--account-dot-off      : #5A5A62;
-	--account-dot-on       : #4CAF50;
-	--account-menu-shadow  : 0 10px 28px rgba(0, 0, 0, 0.45);
+	--hp-bg: #15121C;
+	--hp-side: #1B1724;
+	--hp-card: #221D2B;
+	--hp-sunken: #2A2434;
+	--hp-border: #2E2838;
+	--hp-text: #ECE9F2;
+	--hp-muted: #9A93A8;
+	--hp-violet: #8B63F0;
+	--hp-violet-text: #B9A0FF;
+	--hp-violet-soft: rgba(139, 99, 240, 0.18);
+	--hp-orange: #F2A65A;
+	--hp-orange-hover: #F6B677;
+	--hp-on-orange: #22140A;
+	--hp-online: #4FC29B;
+	--hp-danger: #F07A72;
+	--hp-shadow: 0 12px 34px rgba(0, 0, 0, 0.45);
+	--hp-thumb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23574E68' stroke-width='1.3' stroke-linejoin='round'%3E%3Cpath d='M12 3.5l8 4.5v8l-8 4.5-8-4.5V8z'/%3E%3Cpath d='M4 8l8 4.5L20 8M12 12.5v8'/%3E%3C/svg%3E");
+	color-scheme: dark;
 }

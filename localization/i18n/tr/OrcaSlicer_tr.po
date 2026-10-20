@@ -40110,3 +40110,47 @@ msgstr ""
 
 #~ msgid "Cannot print multiple filaments which have large difference of temperature together. Otherwise, the extruder and nozzle may be blocked or damaged during printing"
 #~ msgstr "Sıcaklık farkı çok büyük olan birden fazla filament aynı anda basılamaz. Aksi takdirde ekstruder ve nozul baskı sırasında tıkanabilir veya zarar görebilir"
+
+# AI Translated
+msgid "Recent projects"
+msgstr "Son projeler"
+
+# AI Translated
+msgid "Model library"
+msgstr "Model kütüphanesi"
+
+# AI Translated
+msgid "Gallery"
+msgstr "Galeri"
+
+# AI Translated
+msgid "Print history"
+msgstr "Baskı geçmişi"
+
+# AI Translated
+msgid "Search projects"
+msgstr "Projelerde ara"
+
+# AI Translated
+msgid "See all"
+msgstr "Tümü"
+
+# AI Translated
+msgid "No recent projects yet. Start a new one or open a 3MF file."
+msgstr "Henüz son proje yok. Yeni bir proje başlat ya da bir 3MF dosyası aç."
+
+# AI Translated
+msgid "No projects match your search."
+msgstr "Aramanla eşleşen proje yok."
+
+# AI Translated
+msgid "Models you create on SpaceTools3D will show up here."
+msgstr "SpaceTools3D'de oluşturduğun modeller burada görünecek."
+
+# AI Translated
+msgid "Browse ready-to-print models from the SpaceTools3D gallery."
+msgstr "SpaceTools3D galerisindeki baskıya hazır modellere göz at."
+
+# AI Translated
+msgid "Open spacetools3d.com"
+msgstr "spacetools3d.com'u aç"

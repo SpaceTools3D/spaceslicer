@@ -1,283 +1,163 @@
+/*---- SpaceSlicer home page. Light values here; dark.css (added by globalapi.js in dark mode)
+      redefines the same tokens. Components only use the tokens. ----*/
+:root
+{
+	--hp-bg: #F6F5F9;
+	--hp-side: #FFFFFF;
+	--hp-card: #FFFFFF;
+	--hp-sunken: #EEECF3;
+	--hp-border: #E4E0EC;
+	--hp-text: #1E1A26;
+	--hp-muted: #6C6579;
+	--hp-violet: #7B4FE0;
+	--hp-violet-text: #6A3FD6;
+	--hp-violet-soft: rgba(123, 79, 224, 0.10);
+	--hp-orange: #EE9A48;
+	--hp-orange-hover: #F2A65A;
+	--hp-on-orange: #22140A;
+	--hp-online: #3BB57A;
+	--hp-danger: #D9534F;
+	--hp-shadow: 0 10px 30px rgba(30, 20, 50, 0.14);
+	--hp-thumb: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23A49CB3' stroke-width='1.3' stroke-linejoin='round'%3E%3Cpath d='M12 3.5l8 4.5v8l-8 4.5-8-4.5V8z'/%3E%3Cpath d='M4 8l8 4.5L20 8M12 12.5v8'/%3E%3C/svg%3E");
+}
+
 *
 {
-	padding:0px;
-	border: 0px;
-	margin: 0px;
-    font-family: "system-ui", "Segoe UI", Roboto, Oxygen, Ubuntu, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-sans;
-	border-color: #D7D7D7;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
 	user-select: none;
 }
 
-html, body {
+html, body
+{
 	height: 100%;
 	width: 100%;
-    margin: 0px;
-    padding: 0px;
-	line-height: 20px;
-    font-size: 16px;	
 }
 
-.ZScrol::-webkit-scrollbar {/*滚动条整体样式*/
-    width: 12px;     /*高宽分别对应横竖滚动条的尺寸*/
-    height: 1px;
-	padding: 2px;
-}
-
-.ZScrol::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
-    border-radius: 6px;
-    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-	box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-    background-color: #AAAAAA;
-}
-
-.ZScrol::-webkit-scrollbar-track {/*滚动条里面轨道*/
-        -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-	    box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-        border-radius: 10px;
-        background: #EDEDED;
-}
-
-
-.RedFont
-{
-	font-size:12px;
-	color: var(--warn-color);
-}
-
-.LinkBtn
-{
-	font-size:12px;
-	color: #00ffea;	
-	cursor: pointer;
-}
-
-.LinkBtn:hover
-{
-	text-decoration:underline;
-}
-
-/*------------------*/
-#DebugText
-{
-	height:30px;
-}
-
-/*------------------*/
 body
 {
-	display:flex;
-	justify-content: flex-start;
+	display: flex;
+	overflow: hidden;
+	background: var(--hp-bg);
+	color: var(--hp-text);
+	font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "SF Pro Text", Roboto, Ubuntu, "Helvetica Neue", sans-serif;
+	font-size: 14px;
+	line-height: 1.4;
 }
 
+[hidden] { display: none !important; }
+
+svg
+{
+	width: 18px;
+	height: 18px;
+	flex: none;
+	fill: none;
+	stroke: currentColor;
+	stroke-width: 1.7;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+:focus-visible
+{
+	outline: 2px solid var(--hp-violet);
+	outline-offset: 2px;
+}
+
+.ZScrol::-webkit-scrollbar { width: 10px; }
+.ZScrol::-webkit-scrollbar-track { background: transparent; }
+.ZScrol::-webkit-scrollbar-thumb
+{
+	background: var(--hp-border);
+	border-radius: 5px;
+	border: 2px solid var(--hp-bg);
+}
+
+/*================ Side bar ================*/
 #LeftBoard
 {
-	display: none;  /* shown by cloud_providers_info from backend */
-	border-right-width: 1px;
-	border-right-style: solid;
-	width:262px;
+	/*---- 262px plus the 1px separator: the width the app gives the nav (kLeftNavWidth). ----*/
+	width: 263px;
+	flex: none;
 	height: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 18px 14px 14px;
+	background: var(--hp-side);
+	border-right: 1px solid var(--hp-border);
+	overflow-y: auto;
 }
 
-/*------Account rows and account menu------*/
-
-/*----These shadow similar tokens in global.css on purpose: global.css themes on the OS
-      via prefers-color-scheme, while this page themes on the dark.css link that
-      SwitchDarkMode() injects from the app theme, so the two can disagree.----*/
-:root
-{
-	--row-hover            : #DED2FB;
-	--warn-color           : #F07E4A;
-	--account-avatar-bg    : #E6EBEA;
-	--account-avatar-glyph : #9AA5A3;
-	--account-surface      : #FFFFFF;
-	--account-name         : #262E30;
-	--account-meta         : #7C8282;
-	--account-border       : #DBDBDB;
-	--account-divider      : #E2E4E4;
-	--account-action       : #5B35C4;
-	--account-danger       : #D33B3B;
-	--account-danger-bg    : rgba(211, 59, 59, 0.10);
-	--account-warn-bg      : rgba(240, 126, 74, 0.12);  /*----var(--warn-color) at 12%----*/
-	--account-dot-off      : #C4CBCA;
-	--account-dot-on       : #34A853;
-	--account-menu-shadow  : 0 10px 28px rgba(20, 30, 28, 0.18);
-
-	--glyph-account:
-		url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="12" r="5.6"/><path d="M4.9 29a11.1 11.1 0 0 1 22.2 0Z"/></svg>');
-	--glyph-logout:
-		url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="black" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9.5 2.5H3.5v11h6"/><path d="M11 5.5L14 8l-3 2.5"/><path d="M14 8H6.5"/></svg>');
-}
-
-#LoginArea
-{
-	position: relative;
-	padding: 10px 8px;
-	box-sizing: border-box;
-	width: 262px;
-	border-bottom: 1px solid var(--account-divider);
-}
-
-.AccountRow
+#Brand
 {
 	display: flex;
 	align-items: center;
-	gap: 8px;
-	padding: 8px 10px 8px 14px;  /*----label column lines up with the navigation below----*/
+	gap: 10px;
+	padding: 2px 8px 18px;
+}
+
+#BrandLogo
+{
+	width: 30px;
+	height: 30px;
 	border-radius: 8px;
-	cursor: pointer;
-	user-select: none;
 }
 
-.AccountRow:hover
+#BrandName
 {
-	background-color: var(--row-hover);
+	font-size: 17px;
+	font-weight: 700;
+	letter-spacing: -0.01em;
 }
 
-.AccountRow:focus-visible
-{
-	outline: 2px solid var(--account-action);
-	outline-offset: -2px;
-}
-
-.AccountRow.Disabled
-{
-	cursor: default;
-	opacity: 0.5;
-}
-
-.AccountRow.Disabled:hover
-{
-	background-color: transparent;
-}
-
-.AccountRow.Disabled .AccountSignIn
-{
-	display: none;
-}
-
-/*----Avatar----*/
-.AccountAvatar
-{
-	position: relative;
-	flex: 0 0 auto;
-	width: 36px;
-	height: 36px;
-	border-radius: 50%;
-	background-color: var(--account-avatar-bg);
-}
-
-.AccountAvatar::before  /* placeholder shown until an avatar image loads */
-{
-	content: "";
-	position: absolute;
-	inset: 0;
-	-webkit-mask-image: var(--glyph-account);
-	mask-image: var(--glyph-account);
-	-webkit-mask-size: 100% 100%;
-	mask-size: 100% 100%;
-	background-color: var(--account-avatar-glyph);
-}
-
-.AccountAvatarImg
-{
-	position: absolute;
-	inset: 0;
-	width: 100%;
-	height: 100%;
-	border-radius: 50%;
-	object-fit: cover;
-	display: block;
-}
-
-.AccountAvatarImg:not([src])
-{
-	display: none;
-}
-
-/*----Row labels----*/
-.AccountText
+#BtnArea, #LeftBottom
 {
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	flex: 1 1 auto;
-	min-width: 0;
+	gap: 2px;
 }
 
-.AccountName,
-.AccountSecondary  /*----the provider name, or the sign-in state where the row has no name yet----*/
+#LeftBottom
 {
-	font-size: 15px;
-	line-height: 20px;
-	color: var(--account-name);
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+	margin-top: auto;
+	padding-top: 12px;
+	border-top: 1px solid var(--hp-border);
 }
 
-.AccountName
+.BtnItem
 {
-	display: none;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	height: 40px;
+	padding: 0 12px;
+	border-radius: 10px;
+	color: var(--hp-muted);
+	font-weight: 500;
+	cursor: pointer;
+}
+
+.BtnItem:hover
+{
+	background: var(--hp-sunken);
+	color: var(--hp-text);
+}
+
+.BtnItem.BtnItemSelected
+{
+	background: var(--hp-violet-soft);
+	color: var(--hp-violet-text);
 	font-weight: 600;
 }
 
-.AccountSignIn
+/*---- Bambu Cloud ----*/
+#LoginArea
 {
-	flex: 0 0 auto;
-	font-size: 12px;
-	font-weight: 600;
-	color: var(--account-action);
-}
-
-.AccountChevron
-{
-	display: none;
-	flex: 0 0 auto;
-	width: 12px;
-	height: 12px;
-	color: var(--account-meta);
-	transition: transform 0.15s ease;
-}
-
-.AccountRow.SignedIn .AccountName    { display: block; }
-.AccountRow.SignedIn .AccountChevron { display: block; }
-.AccountRow.SignedIn .AccountSignIn  { display: none; }
-.AccountRow.SignedIn .AccountSecondary
-{
-	font-size: 11px;
-	line-height: 14px;
-	color: var(--account-meta);
-}
-
-.AccountRow.MenuOpen .AccountChevron { transform: rotate(180deg); }
-
-#NoPluginTip
-{
-	display: none;
-	margin: 4px 0 2px;
-	padding: 8px 10px;
-	border-radius: 6px;
-	background-color: var(--account-warn-bg);
-}
-
-#NoPluginText
-{
-	line-height: 16px;
-}
-
-#NoPluginTip .LinkBtn
-{
-	color: var(--warn-color);
-	text-decoration: underline;
-}
-
-/*----Bambu Cloud, folded under the main account----*/
-#BambuCloudSection
-{
-	display: none;  /* shown by cloud_providers_info from backend */
-	margin-top: 8px;
-	padding-top: 6px;
-	border-top: 1px solid var(--account-divider);
+	position: relative;
+	margin-bottom: 4px;
 }
 
 #BambuCloudHeader
@@ -285,826 +165,448 @@ body
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	height: 28px;
-	padding: 0 10px 0 14px;
-	border-radius: 6px;
+	height: 32px;
+	padding: 0 12px;
+	border-radius: 8px;
+	color: var(--hp-muted);
 	font-size: 12px;
-	color: var(--account-meta);
+	font-weight: 600;
 	cursor: pointer;
-	user-select: none;
 }
 
-#BambuCloudHeader:hover
-{
-	color: var(--account-name);
-}
-
-#BambuCloudHeader:focus-visible
-{
-	outline: 2px solid var(--account-action);
-	outline-offset: -2px;
-}
+#BambuCloudHeader:hover { color: var(--hp-text); }
 
 .SectionChevron
 {
-	flex: 0 0 auto;
 	width: 12px;
 	height: 12px;
-	transition: transform 0.2s ease;
+	transition: transform 0.15s;
 }
 
-#BambuCloudHeader.Expanded .SectionChevron
-{
-	transform: rotate(90deg);
-}
-
-.SectionLabel
-{
-	flex: 1 1 auto;
-	min-width: 0;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
+#BambuCloudHeader.Expanded .SectionChevron { transform: rotate(90deg); }
 
 #BambuStatusDot
 {
-	flex: 0 0 auto;
 	width: 7px;
 	height: 7px;
 	border-radius: 50%;
-	background-color: var(--account-dot-off);
+	background: var(--hp-border);
+	margin-left: auto;
 }
 
-#BambuStatusDot.Online
-{
-	background-color: var(--account-dot-on);
-}
+#BambuStatusDot.Online { background: var(--hp-online); }
 
-#BambuCloudBody
-{
-	max-height: 0;
-	overflow: hidden;
-	transition: max-height 0.25s ease;
-}
+#BambuCloudBody { display: none; padding: 2px 0 6px; }
+#BambuCloudBody.Expanded { display: block; }
 
-#BambuCloudBody.Expanded
+.AccountRow
 {
-	max-height: 200px;
-	padding-bottom: 2px;
-}
-
-.AccountRowCompact
-{
-	padding: 6px 10px 6px 24px;
-}
-
-.AccountRowCompact .AccountAvatar
-{
-	width: 26px;
-	height: 26px;
-}
-
-.AccountRowCompact .AccountName,
-.AccountRowCompact .AccountSecondary
-{
-	font-size: 13px;
-	line-height: 17px;
-}
-
-.AccountRowCompact .AccountSecondary
-{
-	color: var(--account-meta);
-}
-
-.AccountRowCompact.SignedIn .AccountSecondary  /*----the section header already names this provider----*/
-{
-	display: none;
-}
-
-/*----Account menu----*/
-#AccountMenu
-{
-	display: none;
-	position: absolute;
-	left: 8px;
-	right: 8px;
-	z-index: 20;
-	padding: 4px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 8px 10px;
 	border-radius: 10px;
-	border: 1px solid var(--account-border);
-	background-color: var(--account-surface);
-	box-shadow: var(--account-menu-shadow);
+	cursor: pointer;
 }
 
-#AccountMenu.Open
+.AccountRow:hover, .AccountRow.MenuOpen { background: var(--hp-sunken); }
+.AccountRow.Disabled { opacity: 0.5; cursor: default; }
+
+.AccountAvatar
 {
-	display: block;
-	animation: AccountMenuIn 0.12s ease-out;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	flex: none;
+	overflow: hidden;
+	background: var(--hp-violet-soft) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239A86D8' stroke-width='1.7' stroke-linecap='round'%3E%3Ccircle cx='12' cy='9.5' r='3.5'/%3E%3Cpath d='M5.5 19c1.3-3 3.8-4.5 6.5-4.5s5.2 1.5 6.5 4.5'/%3E%3C/svg%3E") center / 18px no-repeat;
 }
 
-@keyframes AccountMenuIn
+.AccountAvatarImg
 {
-	from { opacity: 0; transform: translateY(-4px); }
-	to   { opacity: 1; transform: none; }
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
-@media (prefers-reduced-motion: reduce)
+.AccountAvatarImg:not([src]) { display: none; }
+
+.AccountText
 {
-	#AccountMenu.Open   { animation: none; }
-	.AccountChevron,
-	.SectionChevron,
-	#BambuCloudBody     { transition: none; }
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	flex: 1;
 }
 
-#AccountMenuHandle
+.AccountName
 {
-	display: none;
-	padding: 9px 10px;
-	border-bottom: 1px solid var(--account-border);
-	font-size: 12px;
-	line-height: 16px;
-	color: var(--account-meta);
+	font-weight: 600;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+.AccountSecondary
+{
+	font-size: 12px;
+	color: var(--hp-muted);
+}
+
+.AccountSignIn
+{
+	font-size: 12px;
+	font-weight: 600;
+	color: var(--hp-violet-text);
+}
+
+.AccountRow:not(.SignedIn) .AccountName,
+.AccountRow.SignedIn .AccountSecondary,
+.AccountRow.SignedIn .AccountSignIn { display: none; }
+
+#NoPluginTip
+{
+	display: none;
+	padding: 4px 12px 0;
+}
+
+.RedFont
+{
+	font-size: 12px;
+	color: var(--hp-danger);
+}
+
+.LinkBtn
+{
+	color: var(--hp-violet-text);
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+#AccountMenu
+{
+	position: absolute;
+	left: 0;
+	right: 0;
+	display: none;
+	padding: 6px;
+	background: var(--hp-card);
+	border: 1px solid var(--hp-border);
+	border-radius: 12px;
+	box-shadow: var(--hp-shadow);
+	z-index: 10;
+}
+
+#AccountMenu.Open { display: block; }
+
+#AccountMenuHandle
+{
+	padding: 6px 10px 8px;
+	font-size: 12px;
+	color: var(--hp-muted);
+	border-bottom: 1px solid var(--hp-border);
+	margin-bottom: 4px;
 }
 
 #AccountMenuLogout
 {
-	display: flex;
-	align-items: center;
-	gap: 8px;
-	height: 34px;
-	padding: 0 10px;
-	border-radius: 6px;
-	font-size: 13px;
-	color: var(--account-name);
+	padding: 8px 10px;
+	border-radius: 8px;
+	color: var(--hp-danger);
 	cursor: pointer;
 }
 
-#AccountMenuLogout:hover
-{
-	background-color: var(--account-danger-bg);
-	color: var(--account-danger);
-}
+#AccountMenuLogout:hover { background: var(--hp-sunken); }
 
-#AccountMenuLogout:focus-visible
-{
-	outline: 2px solid var(--account-action);
-	outline-offset: -2px;
-}
-
-#AccountMenuLogoutIcon
-{
-	width: 15px;
-	height: 15px;
-	-webkit-mask: var(--glyph-logout) center / contain no-repeat;
-	mask: var(--glyph-logout) center / contain no-repeat;
-	background-color: currentColor;
-}
-
-
-/*------------------*/
-#BtnArea
-{
-	
-}
-
-
-.BtnItem
-{
-    padding-left:40px;	
-	height:50px;
-	line-height: 50px;
-	display: flex;
-	justify-content:flex-start;
-	cursor: pointer;
-}
-
-.BtnItem:hover
-{
-	background-color: var(--row-hover);
-}
-
-.BtnItemSelected
-{
-	background-color: var(--row-hover);
-}
-
-.BtnIcon
-{
-	margin-right:6px;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-}
-
-.LeftIcon
-{
-	width:20px;
-	height: 20px;
-}
-
-.ShortcutBrandIcon
-{
-	width: 20px;
-	height: 20px;
-	border-radius: 5px;
-	display: block;
-}
-
-
-/*--------------------*/
+/*================ Main area ================*/
 #RightBoard
 {
-	width: 100%;
+	flex: 1;
+	min-width: 0;
 	height: 100%;
-	min-width: 835px;
-	overflow-y:auto;
+	display: flex;
+	flex-direction: column;
 }
 
-/*---- Cloud mode: OrcaCloud is a native pane to the right of the app panel, so this page
-      is reduced to its left nav column (the class is toggled by SetCloudMode in js/home.js). ----*/
-body.cloud-mode #RightBoard
+body.cloud-mode #RightBoard { display: none; }
+
+#TopBar
 {
-	display: none;
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	padding: 18px 32px;
 }
 
-body.cloud-mode #LeftBoard
+#SearchBox
 {
-	/*---- 262px of column plus its 1px separator is the width the app gives the nav. ----*/
-	height: 100%;
-	overflow-y: auto;
+	flex: 1;
+	max-width: 420px;
+	min-width: 0;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	padding: 0 14px;
+	background: var(--hp-card);
+	border: 1px solid var(--hp-border);
+	border-radius: 11px;
+	color: var(--hp-muted);
+	cursor: text;
 }
+
+#SearchBox:focus-within { border-color: var(--hp-violet); }
+
+#SearchInput
+{
+	flex: 1;
+	min-width: 0;
+	height: 100%;
+	border: 0;
+	outline: 0;
+	background: transparent;
+	color: var(--hp-text);
+	font: inherit;
+	user-select: text;
+}
+
+#SearchInput::placeholder { color: var(--hp-muted); }
+#SearchInput::-webkit-search-cancel-button { cursor: pointer; }
+
+#TopActions
+{
+	display: flex;
+	gap: 10px;
+	margin-left: auto;
+}
+
+.Btn
+{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	height: 40px;
+	padding: 0 16px;
+	border-radius: 11px;
+	font: inherit;
+	font-weight: 600;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.BtnGhost
+{
+	background: var(--hp-card);
+	border: 1px solid var(--hp-border);
+	color: var(--hp-text);
+}
+
+.BtnGhost:hover { border-color: var(--hp-violet); }
+
+.BtnPrimary
+{
+	background: var(--hp-orange);
+	border: 1px solid var(--hp-orange);
+	color: var(--hp-on-orange);
+}
+
+.BtnPrimary:hover { background: var(--hp-orange-hover); }
 
 #ContentBoard
 {
-	overflow-y:auto;
-	padding: 0px 40px;
-	display: flex;
-	flex-direction: column;
-	position: relative;
-	height: 100%;
-}
-
-.TitleSmallIcon
-{
-	width:30px;
-	height: 30px;
-	margin-right: 10px;
-}
-
-#MenuArea
-{
-	height: 140px;
-	display: flex;
-	align-items: center;
-	flex: 0 0 140px;
-}
-
-.MenuItem
-{
-	border-width: 1px;
-	border-style: solid;
-	border-radius: 12px;
-	height: 101px;
-	width: 253px;
-	padding-left: 20px;
-	display: flex;
-	justify-content: flex-start;
-	align-items: center;
-	margin-right: 16px;
-	cursor: pointer;
-}
-
-.MenuItem:hover
-{
-	border-color: #7B4FE0;		/*ORCA color*/
-	background-color: #F1ECFD; /*ORCA color with %25 opacity*/
-}
-
-.MenuIcon
-{
-	margin-right: 1em;
-}
-
-.MenuIcon img
-{
-	width:56px;
-	height: 56px;
-}
-
-.MenuDesc
-{
-	color: #A8A8A8;
-}
-
-
-.Content-Title
-{
-	line-height: 30px;
-	font-weight: 700;
-}
-
-#HotspotWEB
-{
-	width:100%;
-	height: 420px;
-}
-
-#HotModelBlock
-{
-	display:flex;
-	align-items: center;
-	justify-content: space-between;
-	padding: 0px;
-}
-
-#HotModel_LEFT_Title
-{
-	display:flex;
-	align-items: center;
-	padding: 6px 0px;	
-}
-
-#HotModel_RIGHT_Title
-{
-	font-size:16px;
-}
-
-
-.HotModel_PrevImg
-{
-	width: 200px;
-	height: 148px;
-	object-fit: cover;
-}
-
-
-#RecentFileArea
-{
-	margin-top: 10px;
 	flex: 1;
-	display: flex;
-	flex-direction: column;
 	min-height: 0;
-}
-
-#RecentTitleBlock
-{
-	display:flex;
-	align-items: center;
-	padding: 6px 0px;
-}
-
-#RecentClearAllBtn
-{
-	margin-left: 20px;
-	display: none;
-}
-
-#RecentTitle
-{
-	
-}
-
-#FileList
-{
-	flex: 1;
-	display: flex;
-	flex-wrap: wrap;
-	align-content: flex-start;
 	overflow-y: auto;
-	min-height: 0;
+	padding: 6px 32px 32px;
+}
+
+.Section + .Section { margin-top: 32px; }
+
+.SectionHead
+{
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	margin-bottom: 14px;
+}
+
+.SectionHead h2
+{
+	font-size: 17px;
+	font-weight: 650;
+	letter-spacing: -0.01em;
+}
+
+.SeeAll
+{
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--hp-violet-text);
+	cursor: pointer;
+	border-radius: 6px;
+}
+
+.SeeAll:hover { text-decoration: underline; }
+
+.FileGrid
+{
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(178px, 1fr));
+	gap: 16px;
+}
+
+/*---- the home board shows one full row of recent projects, however wide the window is ----*/
+#HomeFileList
+{
+	grid-template-rows: auto;
+	grid-auto-rows: 0;
+	row-gap: 0;
+	overflow: hidden;
 }
 
 .FileItem
 {
-	width: 184px;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    word-break: break-all;
-	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	padding: 8px 8px 12px;
+	background: var(--hp-card);
+	border: 1px solid var(--hp-border);
+	border-radius: 14px;
 	cursor: pointer;
-	margin: 8px;
+	min-width: 0;
 }
 
-.FileTip
-{
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	right: 0px;
-	bottom: 0px;
-}
+.FileItem:hover { border-color: var(--hp-violet); }
 
 .FileImg
 {
-	text-align: center;
-	background-color: #E4E4E4;
-	border-radius: 8px;
-	width: 184px;
-	height: 184px;
-	position: relative;	
-}
-
-.FileItem img
-{
-	width: 184px;
-	height: 184px;
-	border-radius: 8px;
-	display: inline-block;
-	object-fit: cover;
-}
-
-.FileImg .FileLogoBadge
-{
-	position: absolute;
-	top: 8px;
-	left: 8px;
-	width: 26px;
-	height: 26px;
-	padding: 2px;
-	box-sizing: border-box;
-	background-color: rgba(255,255,255,0.85);
-	border-radius: 50%;
-}
-
-.FileName
-{
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    word-break: break-all;	
-}
-
-.FileNamePack
-{
-	display: flex;
-	align-items: center;
-	min-width: 0;
+	position: relative;
+	aspect-ratio: 4 / 3;
+	max-width: 100%;
+	margin-bottom: 8px;
+	border-radius: 9px;
 	overflow: hidden;
+	background: var(--hp-sunken) var(--hp-thumb) center / 38% no-repeat;
 }
 
-.FileNamePack .FileName
+.FileImg img
 {
-	flex: 1 1 auto;
-	min-width: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	display: block;
 }
 
 .FilePublishedBadge
 {
-	flex: 0 0 auto;
-	margin-right: 4px;
-	padding: 0 4px;
-	height: 16px;
-	line-height: 16px;
-	font-size: 10px;
-	font-weight: 600;
+	position: absolute;
+	top: 6px;
+	left: 6px;
+	padding: 1px 6px;
+	border-radius: 6px;
+	background: var(--hp-violet);
 	color: #FFFFFF;
-	background-color: #7B4FE0;
-	border-radius: 2px;
+	font-size: 11px;
+	font-weight: 700;
+}
+
+.FileName
+{
+	padding: 0 4px;
+	font-weight: 600;
 	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .FileDate
 {
-	color: #A8A8A8;
+	padding: 0 4px;
+	font-size: 12px;
+	color: var(--hp-muted);
+	font-variant-numeric: tabular-nums;
 }
 
+.EmptyState
+{
+	padding: 28px;
+	border: 1px dashed var(--hp-border);
+	border-radius: 14px;
+	color: var(--hp-muted);
+	text-align: center;
+}
+
+.WebCard
+{
+	display: flex;
+	align-items: center;
+	gap: 16px;
+	padding: 18px 20px;
+	background: var(--hp-card);
+	border: 1px solid var(--hp-border);
+	border-radius: 14px;
+}
+
+.WebCard > svg
+{
+	width: 28px;
+	height: 28px;
+	color: var(--hp-violet);
+}
+
+.WebCard p
+{
+	flex: 1;
+	color: var(--hp-muted);
+}
+
+.WebCardTall
+{
+	flex-direction: column;
+	padding: 56px 24px;
+	text-align: center;
+}
+
+.WebCardTall > svg { width: 40px; height: 40px; }
+.WebCardTall p { flex: none; max-width: 36ch; }
+
+#NoResults { margin-top: 16px; }
+
+/*---- Recent project context menu ----*/
 #recnet_context_menu
 {
-	position: absolute;
-	margin: 0px;
-	padding: 10px;
-	border: 0px;
-	min-width: 100px;
-	border: 1px solid #D7D7D7;
-    top: 100px;
-	border-radius: 5px;
-	color: #323A3D;
-	background-color: #fff;
-    display: none;
-	z-index: 1;
+	position: fixed;
+	display: none;
+	min-width: 200px;
+	padding: 6px;
+	background: var(--hp-card);
+	border: 1px solid var(--hp-border);
+	border-radius: 12px;
+	box-shadow: var(--hp-shadow);
+	z-index: 20;
 }
 
 .CT_Item
 {
-	padding: 4px 12px;
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-}
-
-.CT_Item:hover
-{
-	cursor: pointer;
-	background-color:#7B4FE0; /*ORCA color*/
-	border-radius: 4px;
-	color: #fff;
-}
-
-
-.CT_Icon
-{
-	margin-right: 6px;
-	width: 16px;
-	height: 16px;	
-}
-
-#CT_Delete_Bar:hover  .CT_Delete
-{
-	background: url("../img/remove2.svg");
-	background-repeat: no-repeat;
-	background-size: contain;	
-}
-
-.CT_Delete
-{
-	background: url("../img/remove.svg");
-	background-repeat: no-repeat;
-	background-size: contain;	
-}
-
-#CT_Folder_Bar:hover .CT_Explore
-{
-	background: url("../img/open_folder2.svg");
-	background-repeat: no-repeat;
-	background-size: contain;	
-}
-
-.CT_Explore
-{
-	background: url("../img/open_folder.svg");
-	background-repeat: no-repeat;
-	background-size: contain;		
-}
-
-
-.CT_Seperate
-{
-	border-bottom:1px solid  #C5C5C5;
-}
-
-.CT_Text
-{
-	line-height: 20px;
-	height: 20px;	
-	display: block;
-}
-
-/*--------Mall------*/
-#MallBoard
-{
-	height: 100%;
-	max-width: 1600px;
-	overflow-y: hidden;
-	padding: 0px 40px;
-	display: none;
-}
-
-#MallWeb
-{
-	width: 100%;
-	height: 95%;
-	border: 1px solid #D9D9D9;
-}
-
-/*------Manual------*/
-#ManualBoard
-{
-	height: 100%;
-	max-width: 1600px;
-	overflow-y: hidden;
-	padding: 0px 40px;
-	display: none;
-}
-
-#ManualWeb
-{
-	width: 100%;
-	height: 95%;
-	border: 1px solid #D9D9D9;
-}
-
-
-/*---------Wiki----------*/
-#WikiGuideBigBoard
-{
-	display:none;
-}
-
-
-#WikiGuideBoard
-{
-	display: flex;
-	flex-wrap: wrap;
-	align-content: flex-start;
-	overflow-y: auto;
-	margin: 30px 40px;
-	position: relative;
-	top: 0px;
-	bottom: 0px;
-	right: 0px;
-	left: 0px;
-}
-
-
-@media screen and (max-width: 1100px) {
-.GuideBlock
-{
-	width: calc(50% - 20px);
-	margin: 0px 10px 40px 10px;
-	cursor: pointer;
-}
-}
-
-@media screen and ( min-width:1101px) and ( max-width:1680px )
-{
-	.GuideBlock
-	{
-		width: calc(33% - 20px);
-	    margin: 0px 10px 40px 10px;
-		cursor: pointer;
-	}
-}
-
-@media screen and ( min-width:1681px) and (max-width:2120px ) {
-.GuideBlock
-{
-    width: calc(25% - 20px);	
-	margin: 0px 10px 40px 10px;
-	cursor: pointer;
-}
-}
-
-@media screen and ( min-width:2121px) and (max-width:2620px ) {
-.GuideBlock
-{
-    width: calc(20% - 20px);
-	margin: 0px 10px 40px 10px;
-	cursor: pointer;
-}
-}
-
-@media screen  and (min-width:2621px ) and (max-width:3120px ) {
-.GuideBlock
-{
-    width: calc(16.6% - 20px);
-	margin: 0px 10px 40px 10px;
-	cursor: pointer;
-}
-}
-
-@media screen  and (min-width:3121px ) {
-.GuideBlock
-{
-    width: calc(14.2% - 20px);
-	margin: 0px 10px 40px 10px;
-	cursor: pointer;
-}
-}
-
-
-
-
-.UG_IMG
-{
-	width: 100%;	
-}
-
-.UG_IMG img
-{
-	width: 100%;
-	border-radius: 5px 5px 0px 0px;
-}
-
-.UG_TITLE
-{
-	font-size: 18px;
-	font-weight: 700;
-	line-height: 20px;
-	width: 100%;
-	margin-top: 20px;
-	margin-bottom: 4px;
-}
-
-.UG_DESC
-{
-	width: 100%;
-	line-height: 18px;
-	color: #4E5454;
-	font-size: 14px;
-}
-
-/*--Staff Pick--*/
-#HotModelArea
-{
-	display: none;
-}
-
-#HotModel_Swiper
-{
-	padding: 0px;
-}
-
-.HotModel_Designer_Info
-{
-	display:flex;
-	align-items: center;
-	height: 28px;
-	padding: 0px 8px;	
-}
-
-.HotModel_Designer_Info img
-{
-	width: 16px;
-	height: 16px;
+	padding: 8px 10px;
 	border-radius: 8px;
-}
-
-.HotModel_Designer_Info span
-{
-	margin-left: 6px;
-	font-size: 12px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-#HotModel_RIGHT_Title:hover
-{
-	cursor: pointer;	
-	color:#7B4FE0;	
-}
-
-.HotModelPiece
-{
-	width: 200px!important;
-	display:flex;
-	flex-direction: column;
 	cursor: pointer;
-	border: 1px solid #EEEEEE;
-	box-shadow: 0px 2px 12px rgba(0, 0, 0, 0.04);
-    border-radius: 8px;
 }
 
-.HotModel_PrevBlock
+.CT_Item:hover { background: var(--hp-sunken); }
+#CT_Delete_Bar { color: var(--hp-danger); }
+
+@media (max-width: 760px)
 {
-	height: 150px;
+	#TopBar { flex-wrap: wrap; padding: 14px 20px; }
+	#SearchBox { max-width: none; flex-basis: 100%; }
+	#TopActions { margin-left: 0; }
+	#ContentBoard { padding: 6px 20px 24px; }
 }
 
-.HotModel_PrevImg
+@media (prefers-reduced-motion: reduce)
 {
-	width: 200px;
-	height: 150px;
-}
-
-.HotModel_NameText
-{
-	height: 32px;
-	line-height: 32px;
-	padding: 0px 8px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	font-size: 14px;
-}
-
-
-.swiper-scrollbar
-{
-	height: 10px!important;
-}
-
-.swiper-button-prev
-{
-	width: 40px!important;
-	height: 40px!important;
-	border-radius: 20px!important;
-	background: rgba(244, 244, 244, 0.88);
-}
-
-.swiper-button-next
-{
-	width: 40px!important;
-	height: 40px!important;
-	border-radius: 20px!important;
-	background: rgba(244, 244, 244, 0.88);
-}
-
-.swiper
-{
-    --swiper-theme-color: #ff6600;/* 设置Swiper风格 */
-    --swiper-navigation-color: #676767;/* 单独设置按钮颜色 */
-    --swiper-navigation-size: 12px;/* 设置按钮大小 */
-}
-
-.swiper-button-disabled
-{
-	opacity: 1!important;
-	cursor: pointer!important;
-	pointer-events: auto!important;
+	.SectionChevron { transition: none; }
 }
