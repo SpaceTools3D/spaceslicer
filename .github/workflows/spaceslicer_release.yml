@@ -51,6 +51,15 @@ jobs:
           pattern: SpaceSlicer_*
           path: dl
 
+      - name: Download the build's Linux AppImages
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          run-id: ${{ env.RUN_ID }}
+          github-token: ${{ github.token }}
+          pattern: OrcaSlicer_Linux_ubuntu_2404_*V*
+          path: dl
+
       - name: Give the files fixed names
         id: files
         run: |
@@ -61,6 +70,8 @@ jobs:
           f=$(pick "dl/SpaceSlicer_Windows_Installer_*_x64/*.exe");   [ -n "$f" ] && cp "$f" out/SpaceSlicer_Windows_x64_Setup.exe
           f=$(pick "dl/SpaceSlicer_Windows_Installer_*_arm64/*.exe"); [ -n "$f" ] && cp "$f" out/SpaceSlicer_Windows_arm64_Setup.exe
           f=$(pick "dl/SpaceSlicer_Mac_universal_*/*.dmg");           [ -n "$f" ] && cp "$f" out/SpaceSlicer_Mac_universal.dmg
+          f=$(find dl -path "dl/OrcaSlicer_Linux_ubuntu_2404_V*/*" -name "*.AppImage" -type f | head -1); [ -n "$f" ] && cp "$f" out/SpaceSlicer_Linux_x86_64.AppImage
+          f=$(find dl -path "dl/OrcaSlicer_Linux_ubuntu_2404_aarch64_V*/*" -name "*.AppImage" -type f | head -1); [ -n "$f" ] && cp "$f" out/SpaceSlicer_Linux_aarch64.AppImage
           for a in x64 arm64; do
             d=$(find dl -maxdepth 1 -type d -name "SpaceSlicer_Windows_*_${a}_portable" | head -1)
             if [ -n "$d" ]; then (cd "$d" && zip -qr "$GITHUB_WORKSPACE/out/SpaceSlicer_Windows_${a}_portable.zip" .); fi
@@ -76,11 +87,23 @@ jobs:
         run: |
           set -e
           tag="v${{ steps.files.outputs.ver }}"
+          # A platform whose build did not finish this time (e.g. no macOS runner was free) keeps the previous file,
+          # so the download page never loses a platform.
+          for name in SpaceSlicer_Windows_x64_Setup.exe SpaceSlicer_Windows_arm64_Setup.exe SpaceSlicer_Mac_universal.dmg \
+                      SpaceSlicer_Windows_x64_portable.zip SpaceSlicer_Windows_arm64_portable.zip \
+                      SpaceSlicer_Linux_x86_64.AppImage SpaceSlicer_Linux_aarch64.AppImage; do
+            if [ ! -f "out/$name" ]; then
+              gh release download --repo "${{ github.repository }}" --pattern "$name" --dir out 2>/dev/null \
+                && echo "kept previous $name" || true
+            fi
+          done
+          ls -la out
           gh release delete "$tag" --repo "${{ github.repository }}" --cleanup-tag -y || true
           notes="SpaceSlicer ${{ steps.files.outputs.ver }} — built from ${{ steps.src.outputs.sha }} on $(date -u +%Y-%m-%d).
 
           - Windows: SpaceSlicer_Windows_x64_Setup.exe (ARM: _arm64_), or the portable .zip
           - macOS (Apple Silicon and Intel): SpaceSlicer_Mac_universal.dmg — not notarized: right-click the app and choose Open the first time.
+          - Linux: SpaceSlicer_Linux_x86_64.AppImage (ARM: _aarch64_)
 
           SpaceSlicer is based on OrcaSlicer and licensed under the GNU AGPL v3. Source: this repository at the commit above."
           gh release create "$tag" out/* --repo "${{ github.repository }}" --target "${{ steps.src.outputs.sha }}" \
