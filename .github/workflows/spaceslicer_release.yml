@@ -1,0 +1,87 @@
+# SpaceSlicer: after a "Build all" run on main, publish its installers as the GitHub release
+# "v<version>" with fixed file names, so spacetools3d.com can link to
+#   https://github.com/SpaceTools3D/spaceslicer/releases/latest/download/<file>
+name: Publish SpaceSlicer release
+
+on:
+  workflow_run:
+    workflows: ["Build all"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: 'ID of the "Build all" run to publish'
+        required: true
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: spaceslicer-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    # A failing unit test should not hide a finished installer, but a cancelled run is skipped.
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion != 'cancelled'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RUN_ID: ${{ github.event.workflow_run.id || inputs.run_id }}
+    steps:
+      - name: Find the commit of the build
+        id: src
+        run: |
+          sha=$(gh api "repos/${{ github.repository }}/actions/runs/$RUN_ID" --jq .head_sha)
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.src.outputs.sha }}
+          sparse-checkout: version.inc
+          sparse-checkout-cone-mode: false
+
+      - name: Download the build's installers
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ env.RUN_ID }}
+          github-token: ${{ github.token }}
+          pattern: SpaceSlicer_*
+          path: dl
+
+      - name: Give the files fixed names
+        id: files
+        run: |
+          set -e
+          mkdir -p out
+          ls -R dl | head -50
+          pick() { find dl -path "$1" -type f | head -1; }
+          f=$(pick "dl/SpaceSlicer_Windows_Installer_*_x64/*.exe");   [ -n "$f" ] && cp "$f" out/SpaceSlicer_Windows_x64_Setup.exe
+          f=$(pick "dl/SpaceSlicer_Windows_Installer_*_arm64/*.exe"); [ -n "$f" ] && cp "$f" out/SpaceSlicer_Windows_arm64_Setup.exe
+          f=$(pick "dl/SpaceSlicer_Mac_universal_*/*.dmg");           [ -n "$f" ] && cp "$f" out/SpaceSlicer_Mac_universal.dmg
+          for a in x64 arm64; do
+            d=$(find dl -maxdepth 1 -type d -name "SpaceSlicer_Windows_*_${a}_portable" | head -1)
+            if [ -n "$d" ]; then (cd "$d" && zip -qr "$GITHUB_WORKSPACE/out/SpaceSlicer_Windows_${a}_portable.zip" .); fi
+          done
+          ls -la out
+          if [ ! -f out/SpaceSlicer_Windows_x64_Setup.exe ] && [ ! -f out/SpaceSlicer_Mac_universal.dmg ]; then
+            echo "::error::No installer was found in run $RUN_ID"; exit 1
+          fi
+          ver=$(grep 'set(SoftFever_VERSION' version.inc | cut -d '"' -f2)
+          echo "ver=$ver" >> "$GITHUB_OUTPUT"
+
+      - name: Publish (replaces the previous build of the same version)
+        run: |
+          set -e
+          tag="v${{ steps.files.outputs.ver }}"
+          gh release delete "$tag" --repo "${{ github.repository }}" --cleanup-tag -y || true
+          notes="SpaceSlicer ${{ steps.files.outputs.ver }} — built from ${{ steps.src.outputs.sha }} on $(date -u +%Y-%m-%d).
+
+          - Windows: SpaceSlicer_Windows_x64_Setup.exe (ARM: _arm64_), or the portable .zip
+          - macOS (Apple Silicon and Intel): SpaceSlicer_Mac_universal.dmg — not notarized: right-click the app and choose Open the first time.
+
+          SpaceSlicer is based on OrcaSlicer and licensed under the GNU AGPL v3. Source: this repository at the commit above."
+          gh release create "$tag" out/* --repo "${{ github.repository }}" --target "${{ steps.src.outputs.sha }}" \
+            --title "SpaceSlicer ${{ steps.files.outputs.ver }}" --notes "$notes" --latest
