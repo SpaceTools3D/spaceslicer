@@ -1,0 +1,36 @@
+/* Shared setup styling; no printer selection or setup commands are changed. */
+html { background: #17111f; color-scheme: dark; }
+body { background: #17111f; color: #f3edfa; }
+.TextS1, #Content { color: #f3edfa; }
+.TextS2 { color: #b8abc7; }
+#Title div { color: #c4a5ff; }
+a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid #c4a5ff; outline-offset: 3px; }
+#AcceptArea { border-top: 1px solid #35283f; background: #17111f; }
+.ButtonStyleConfirm { background: #f2a258; color: #20120a; border-radius: 9px; }
+.ButtonStyleConfirm:hover { background: #ffba79; color: #20120a; }
+.ButtonStyleConfirm * { color: inherit; }
+.SpaceWelcome { padding: 0; display: flex; min-height: 100%; box-sizing: border-box; overflow-y: auto; text-align: left; background: radial-gradient(ellipse at 90% 20%, #312044, transparent 60%), #17111f; }
+.SpaceSetupBrand { display: flex; align-items: center; gap: 10px; padding: 25px 40px; border-bottom: 1px solid #35283f; font-size: 20px; font-weight: 730; line-height: 26px; letter-spacing: -.5px; }
+.SpaceSetupBrand img { width: 38px; height: 38px; }
+.SpaceSetupBrand small { display: block; color: #b8abc7; font-size: 8px; letter-spacing: 2px; line-height: 13px; font-weight: 400; }
+.SpaceWelcomeBody { position: relative; flex: 1; display: flex; align-items: center; padding: 25px 40px; min-height: 290px; }
+.SpaceWelcomeCopy { position: relative; z-index: 1; max-width: 75%; }
+.SpaceSetupEyebrow, .SpaceSetupEyebrow span { color: #f2a258; font-size: 9px; letter-spacing: 1.5px; line-height: 20px; }
+.SpaceWelcome #Title { font-size: 44px; line-height: 1.08; height: auto; padding: 20px 0 17px; display: block; color: #f3edfa; font-weight: 730; letter-spacing: -1.6px; text-align: left; max-width: 420px; }
+.SpaceWelcome #STip { padding: 0; height: auto; font-size: 13px; line-height: 23px; color: #b8abc7; max-width: 310px; }
+.SpaceWelcome #StartBtn { display: inline-flex; justify-content: space-between; align-items: center; gap: 36px; font-size: 13px; line-height: 20px; margin: 26px 0 0; padding: 13px 21px; height: auto; min-width: 120px; background: #f2a258; color: #20120a; border-radius: 10px; font-weight: 680; }
+.SpaceWelcome #StartBtn:hover { background: #ffba79; }
+.SpaceSetupLocal { color: #b8abc7; font-size: 10px; line-height: 17px; margin-top: 13px; max-width: 310px; }
+.SpaceSetupCube { position: absolute; right: 27px; width: 220px; height: 220px; transform: rotate(-10deg); opacity: .7; }
+.SpaceSetupSteps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 0 40px 30px; }
+.SpaceSetupSteps > div { display: flex; flex-direction: column; gap: 13px; padding: 18px; border: 1px solid #3d2e4d; background: #21182e; border-radius: 13px; }
+.SpaceSetupSteps span { color: #c4a5ff; font-size: 10px; letter-spacing: 2px; }
+.SpaceSetupSteps strong { font-size: 11px; line-height: 18px; color: #f3edfa; font-weight: 550; }
+@media (max-width: 620px) {
+    .SpaceSetupBrand { padding: 18px 25px; }
+    .SpaceWelcomeBody { padding: 25px; }
+    .SpaceSetupCube { width: 140px; height: 140px; right: 15px; opacity: .3; }
+    .SpaceWelcome #Title { font-size: 34px; }
+    .SpaceSetupSteps { margin: 0 25px 20px; gap: 8px; }
+    .SpaceSetupSteps > div { padding: 12px; }
+}

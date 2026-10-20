@@ -118,9 +118,9 @@ function HandleStudio( pVal )
     }
 
     if (providers.indexOf("orca") >= 0) {
-      $("#LeftBoard").show();
+      $("#OrcaAccount, .BtnShortcut").show();
     } else {
-      $("#LeftBoard").hide();
+      $("#OrcaAccount, .BtnShortcut").hide();
     }
   } else if (strCmd == "network_plugin_installtip") {
     // Bambu Cloud is unreachable without the network plugin, so its row only carries the tip.
@@ -148,9 +148,12 @@ function HandleStudio( pVal )
 /*---- OrcaCloud opens as a native pane beside this page, so the shell only switches its
       own cloud-mode state and asks the app to show or hide that pane (WebViewPanel::set_cloud_mode). ----*/
 var m_CloudMode=false;
+var m_SpaceToolsMode=false;
+var m_SpaceToolsPage="login";
 
 function SetCloudMode( bOn )
 {
+    if (bOn) m_SpaceToolsMode=false;
 	if( m_CloudMode==bOn )
 		return;
 
@@ -164,6 +167,27 @@ function SetCloudMode( bOn )
 	}
 }
 
+function SetSpaceToolsMode(on)
+{
+    m_SpaceToolsMode=on;
+    if (on) m_CloudMode=false;
+    $("body").toggleClass("cloud-mode", on || m_CloudMode);
+    if (on) {
+        $(".BtnItem").removeClass("BtnItemSelected");
+        if (m_SpaceToolsPage === "library") $(".SpaceLibrary").addClass("BtnItemSelected");
+        if (m_SpaceToolsPage === "gallery") $(".SpaceGallery").addClass("BtnItemSelected");
+    }
+}
+
+function OpenSpaceTools(page)
+{
+    var command={login:"homepage_spacetools_login", library:"homepage_spacetools_library", gallery:"homepage_spacetools_gallery"}[page];
+    if (command) {
+        m_SpaceToolsPage=page;
+        SendSimpleCommand(command);
+    }
+}
+
 function GotoCloud()
 {
 	SetCloudMode(true);
@@ -172,6 +196,10 @@ function GotoCloud()
 
 function GotoMenu( strMenu )
 {
+    if (m_SpaceToolsMode) {
+        SetSpaceToolsMode(false);
+        SendSimpleCommand("homepage_spacetools_close");
+    }
 	/*---- Any board in the right region means leaving the cloud pane. ----*/
 	if( m_CloudMode )
 	{
@@ -328,43 +356,64 @@ function SetMallUrl( strUrl )
 }
 
 
-function ShowRecentFileList( pList )
+function ShowRecentFileList(pList)
 {
-	let nTotal=pList.length;
-	
-	let strHtml='';
-	for(let n=0;n<nTotal;n++)
-	{
-		let OneFile=pList[n];
-		
-		let sPath=OneFile['path'];
-		let sImg=OneFile["image"] || sImages[sPath];
-		let sTime=OneFile['time'];
-		let sName=OneFile['project_name'];
-		let sPublished=OneFile['published'] == '1';
-		sImages[sPath] = sImg;
-		
-		//let index=sPath.lastIndexOf('\\')>0?sPath.lastIndexOf('\\'):sPath.lastIndexOf('\/');
-		//let sShortName=sPath.substring(index+1,sPath.length);
-		
-		let sBadge=sPublished? '<span class="FilePublishedBadge">'+T("published_badge", "PUB")+'</span>':'';
-		let sLogoBadge=sPublished? '<img class="FileLogoBadge" src="../../images/OrcaSlicer_gradient_circle.svg" alt="" />':'';
-
-		let TmpHtml='<div class="FileItem"  fpath="'+sPath+'"  >'+
-				'<a class="FileTip" title="'+sPath+'"></a>'+
-				'<div class="FileImg" ><img src="'+sImg+'" onerror="this.onerror=null;this.src=\'img/d.png\';"  alt="No Image"  />'+sLogoBadge+'</div>'+
-				'<div class="FileNamePack">'+sBadge+'<div class="FileName TextS1">'+sName+'</div></div>'+
-				'<div class="FileDate">'+sTime+'</div>'+
-			    '</div>';
-		
-		strHtml+=TmpHtml;
-	}
-	
-	$("#FileList").html(strHtml);	
-	
+    const list = document.getElementById("FileList");
+    list.replaceChildren();
+    pList.forEach(function(file) {
+        const path = file.path;
+        const image = file.image || sImages[path] || "img/d.png";
+        sImages[path] = image;
+        const card = document.createElement("div");
+        card.className = "FileItem";
+        card.setAttribute("fpath", path);
+        card.setAttribute("role", "button");
+        card.tabIndex = 0;
+        card.title = path;
+        card.addEventListener("keydown", function(event) {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                OnOpenRecentFile(encodeURI(path));
+            }
+        });
+        const preview = document.createElement("div");
+        preview.className = "FileImg";
+        const img = document.createElement("img");
+        img.src = image;
+        img.alt = "";
+        img.onerror = function() { this.onerror=null; this.src="img/d.png"; };
+        preview.appendChild(img);
+        if (file.published == "1") {
+            const mark = document.createElement("img");
+            mark.className = "FileLogoBadge";
+            mark.src = "../image/spaceslicer.svg";
+            mark.alt = "";
+            preview.appendChild(mark);
+        }
+        card.appendChild(preview);
+        const caption = document.createElement("div");
+        caption.className = "FileNamePack";
+        if (file.published == "1") {
+            const badge = document.createElement("span");
+            badge.className = "FilePublishedBadge";
+            badge.textContent = T("published_badge", "PUB");
+            caption.appendChild(badge);
+        }
+        const name = document.createElement("div");
+        name.className = "FileName TextS1";
+        name.textContent = file.project_name;
+        caption.appendChild(name);
+        card.appendChild(caption);
+        const date = document.createElement("div");
+        date.className = "FileDate";
+        date.textContent = file.time;
+        card.appendChild(date);
+        list.appendChild(card);
+    });
     Set_RecentFile_MouseRightBtn_Event();
-	UpdateRecentClearBtnDisplay();
+    UpdateRecentClearBtnDisplay();
 }
+
 
 function ShowRecnetFileContextMenu()
 {
@@ -496,6 +545,7 @@ function OnDeleteAllRecentFiles()
 
 function UpdateRecentClearBtnDisplay()
 {
+    $("#SpaceEmpty").toggle($(".FileItem").length === 0);
     let AllFile=$(".FileItem");
 	let nFile=AllFile.length;	
 	if( nFile>0 )

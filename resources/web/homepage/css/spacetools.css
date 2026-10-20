@@ -1,0 +1,90 @@
+/* SpaceSlicer's workspace shell. Printer account markup and native commands stay independent. */
+:root {
+    color-scheme: dark;
+    --space-bg: #100c19;
+    --space-panel: #1b1527;
+    --space-line: #332841;
+    --space-text: #f4effb;
+    --space-muted: #ada0bd;
+    --space-accent: #c4a5ff;
+    --space-warm: #f2a258;
+}
+html, body { background: var(--space-bg); color: var(--space-text); }
+button { font: inherit; text-align: left; cursor: pointer; color: inherit; }
+button:focus-visible, summary:focus-visible { outline: 2px solid var(--space-accent); outline-offset: 3px; }
+#LeftBoard {
+    display: flex !important; flex-direction: column; flex: 0 0 262px; width: 262px;
+    box-sizing: content-box; background: #15101f; border-color: var(--space-line); overflow-y: auto;
+}
+.SpaceBrand { display: flex; gap: 8px; align-items: center; padding: 25px 17px 24px; font-size: 24px; font-weight: 730; letter-spacing: -.8px; }
+.SpaceBrand img { width: 46px; height: 46px; }
+.SpaceBrand span { color: var(--space-accent); }
+.SpaceBrand small { display: block; font-size: 9px; line-height: 18px; letter-spacing: 3px; color: var(--space-muted); font-weight: 500; }
+.SpaceAccount { display: flex; align-items: center; gap: 10px; margin: 0 14px 23px; padding: 13px 10px; border: 1px solid var(--space-line); border-radius: 14px; background: var(--space-panel); }
+.SpaceAccountMark { display: grid; place-items: center; flex: 0 0 33px; height: 33px; border-radius: 10px; background: #3a2856; color: var(--space-accent); font-weight: 750; }
+.SpaceAccount strong { display: block; font-size: 13px; line-height: 21px; }
+.SpaceAccount small { display: block; font-size: 10px; line-height: 15px; color: var(--space-muted); }
+.SpaceAccount > span:last-child { margin-left: auto; color: var(--space-accent); }
+.SpaceNav { display: grid; gap: 7px; padding: 0 14px 24px; }
+.BtnItem { display: flex; align-items: center; gap: 13px; width: 100%; height: auto; min-height: 45px; padding: 12px 15px; border-radius: 11px; box-sizing: border-box; font-size: 13px; line-height: 20px; background: transparent; color: var(--space-muted); }
+.BtnItem > span:first-child { font-size: 21px; color: var(--space-accent); width: 23px; text-align: center; }
+.BtnItemSelected, .BtnItemSelected:hover { background: #302142; color: var(--space-text); box-shadow: inset 3px 0 var(--space-accent); }
+.BtnItem:hover { color: var(--space-text); background: #251b33; }
+#SpaceConnections { margin: 0 14px; border-top: 1px solid var(--space-line); padding-top: 18px; }
+#SpaceConnections summary { padding: 0 4px; font-size: 12px; color: var(--space-muted); cursor: pointer; }
+#SpaceConnections > p { font-size: 11px; line-height: 18px; color: var(--space-muted); padding: 12px 4px 0; }
+#LoginArea { width: 100%; padding: 12px 0; border: 0; }
+#LoginArea .AccountRow { padding: 10px 6px; }
+.AccountName { font-size: 12px; color: var(--space-text); }
+.AccountSecondary, .SectionLabel { color: var(--space-muted); font-size: 12px; }
+.AccountSignIn { color: var(--space-accent); font-size: 11px; }
+.SpaceSidebarFoot { display: flex; gap: 8px; align-items: flex-start; margin-top: auto; padding: 30px 23px 20px; font-size: 10px; line-height: 15px; color: var(--space-muted); }
+.SpaceStatusDot { flex: 0 0 5px; height: 5px; border-radius: 50%; background: #96d9ae; margin-top: 5px; }
+#RightBoard { min-width: 0; flex: 1; width: auto; }
+#ContentBoard { padding: 0 38px 30px; height: auto; min-height: 100%; box-sizing: border-box; }
+.SpaceHero { padding: 48px 0 35px; position: relative; isolation: isolate; }
+.SpaceEyebrow { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; color: var(--space-muted); font-size: 10px; letter-spacing: 1.8px; text-transform: uppercase; }
+.SpaceEyebrow > span:first-child { width: 6px; height: 6px; background: var(--space-warm); border-radius: 2px; }
+.SpaceHero h1 { font-size: clamp(30px, 3.5vw, 54px); letter-spacing: -1.8px; line-height: 1.07; font-weight: 740; max-width: 650px; padding: 24px 120px 17px 0; }
+.SpaceHero p { color: var(--space-muted); font-size: 13px; line-height: 23px; max-width: 480px; }
+.SpacePrimary { display: inline-flex; align-items: center; gap: 28px; margin-top: 25px; padding: 13px 19px; background: var(--space-warm); color: #20120a; border-radius: 10px; font-weight: 680; font-size: 12px; }
+.SpacePrimary:hover { background: #ffba79; }
+.SpaceHeroCube { position: absolute; z-index: -1; right: 0; top: 54px; width: 180px; height: 180px; transform: rotate(-9deg); opacity: .68; }
+#MenuArea { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; height: auto; flex: none; align-items: stretch; }
+.MenuItem { position: relative; display: flex; flex-direction: column; justify-content: flex-start; align-items: flex-start; padding: 20px; gap: 9px; height: auto; min-height: 164px; width: auto; margin: 0; border: 1px solid var(--space-line); border-radius: 16px; background: var(--space-panel); box-sizing: border-box; }
+.MenuItem:hover { border-color: #9871c6; background: #261b36; }
+.SpaceTileIcon { color: var(--space-accent); font-size: 25px; line-height: 25px; margin-bottom: 8px; }
+.MenuItem strong { font-size: 14px; line-height: 20px; font-weight: 650; }
+.MenuDesc { color: var(--space-muted); font-size: 11px; line-height: 18px; margin: 0; padding: 0; }
+.SpaceTileArrow { position: absolute; right: 19px; top: 20px; color: #756088; font-size: 17px; }
+#DebugText { display: none; }
+#RecentFileArea { padding: 30px 0 0; }
+#RecentTitleBlock { display: flex; align-items: center; justify-content: space-between; margin: 0; min-height: 30px; }
+#RecentTitle { color: var(--space-text); font-size: 17px; font-weight: 650; }
+#RecentClearAllBtn { color: var(--space-muted); background: transparent; border: 1px solid var(--space-line); border-radius: 8px; height: auto; padding: 5px 10px; font-size: 10px; }
+.SpaceRecentHint { color: var(--space-muted); font-size: 11px; line-height: 20px; margin: 4px 0 15px; }
+#SpaceEmpty { display: grid; justify-items: center; gap: 7px; text-align: center; padding: 28px 15px; border: 1px dashed var(--space-line); border-radius: 15px; color: var(--space-muted); }
+#SpaceEmpty > span { color: var(--space-accent); font-size: 25px; line-height: 32px; }
+#SpaceEmpty strong { color: var(--space-text); font-size: 13px; }
+#SpaceEmpty p { font-size: 11px; }
+#FileList { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; padding-bottom: 24px; }
+.FileItem { width: auto; margin: 0; padding: 9px; border: 1px solid var(--space-line); border-radius: 14px; background: var(--space-panel); }
+.FileItem:hover { border-color: #9871c6; background: #261b36; }
+.FileImg { width: 100%; height: 140px; border-radius: 9px; background: #21182d; }
+.FileName { color: var(--space-text); font-size: 12px; }
+.FileDate { color: var(--space-muted); font-size: 10px; }
+#recnet_context_menu { z-index: 10; border: 1px solid var(--space-line); border-radius: 10px; background: var(--space-panel); color: var(--space-text); }
+body.cloud-mode #LeftBoard { flex-basis: 262px; }
+@media (max-width: 1030px) {
+    #ContentBoard { padding-left: 24px; padding-right: 24px; }
+    .SpaceHero { padding-top: 30px; }
+    .SpaceHeroCube { width: 120px; height: 120px; top: 60px; opacity: .4; }
+    .SpaceHero h1 { padding-right: 80px; }
+    .MenuItem { padding: 16px; min-height: 160px; }
+}
+@media (max-width: 790px) {
+    #MenuArea { grid-template-columns: 1fr; }
+    .MenuItem { min-height: 100px; }
+    .SpaceHeroCube { display: none; }
+    .SpaceHero h1 { padding-right: 0; font-size: 30px; }
+}
