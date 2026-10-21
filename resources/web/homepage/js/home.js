@@ -20,6 +20,8 @@ function OnInit()
 	Set_AccountMenu_Event();
 	Set_RecentFile_Events();
 	UpdateRecentClearBtnDisplay();
+	ShowFeed("library", []);
+	ShowFeed("gallery", []);
 }
 
 var RightBtnFilePath = '';
@@ -66,6 +68,8 @@ function HandleStudio( pVal )
 		$("#NoPluginTip").css("display", bMissing ? "block" : "none");
 		$("#BambuAccount").toggleClass("Disabled", bMissing).attr("aria-disabled", bMissing ? "true" : null);
 		if (bMissing) SetBambuSectionExpanded(true, false);
+	} else if (strCmd == "spacetools_feed") {
+		ShowFeed(pVal["data"]["kind"], pVal["data"]["items"]);
 	} else if (strCmd == "SetLoginPanelVisibility") {
 		SetLoginPanelVisibility(pVal["data"]["visible"]);
 	}
@@ -105,26 +109,30 @@ function GotoMenu( strMenu )
 	ApplySearch();
 }
 
-/*------Search: filters the recent projects by name, switching to the full list------*/
+/*------Search: filters the projects and models of the open board by name------*/
 function OnSearchInput( strText )
 {
 	m_SearchText = strText.trim().toLocaleLowerCase();
-	if (m_SearchText !== "" && m_CurrentMenu != "recent")
-		GotoMenu("recent");
-	else
-		ApplySearch();
+	ApplySearch();
 }
 
 function ApplySearch()
 {
+	let board = $("div[board='" + m_CurrentMenu + "']");
+	let items = board.find(".FileItem, .ModelCard");
 	let nShown = 0;
-	$("#FileList .FileItem").each(function () {
+	$(".FileItem, .ModelCard").each(function () {
 		let bMatch = m_SearchText === "" || ($(this).attr("data-name") || "").indexOf(m_SearchText) >= 0;
 		this.hidden = !bMatch;
-		if (bMatch) nShown++;
+		if (bMatch && board.has(this).length) nShown++;
 	});
-	let bNoResults = m_SearchText !== "" && m_CurrentMenu == "recent" && nShown == 0 && $("#FileList .FileItem").length > 0;
-	document.getElementById("NoResults").hidden = !bNoResults;
+	/*----while searching, the home board shows every match instead of one row per section,
+	      and only the sections that have one----*/
+	$("body").toggleClass("Searching", m_SearchText !== "");
+	$("[board=home] .Section").each(function () {
+		this.hidden = m_SearchText !== "" && $(this).find(".FileItem, .ModelCard").filter(function () { return !this.hidden; }).length == 0;
+	});
+	document.getElementById("NoResults").hidden = !(m_SearchText !== "" && items.length > 0 && nShown == 0);
 }
 
 /*------Recent projects------*/
@@ -188,6 +196,9 @@ function Set_RecentFile_Events()
 			OnOpenRecentFile(encodeURI(RightBtnFilePath));
 	});
 
+	$(document).on("click", ".ModelCard", function () { OpenModelCard(this); });
+	$(document).on("keydown", ".ModelCard", function (e) { if (e.key === "Enter") OpenModelCard(this); });
+
 	$(document).on("keydown", ".FileItem", function (e) {
 		if (e.key !== "Enter") return;
 		RightBtnFilePath = $(this).attr('fpath');
@@ -225,6 +236,7 @@ function UpdateRecentClearBtnDisplay()
 	$("#RecentClearAllBtn").toggle(bAny);
 	$(".RecentEmpty").each(function () { this.hidden = bAny; });
 	$("[board=home] .SeeAll[onClick*=recent]").toggle(bAny);
+	$("#HomeFileList").toggle(bAny);
 }
 
 function OnDeleteRecentFile()
@@ -266,14 +278,61 @@ function OnExploreRecentFile()
 }
 
 /*------SpaceTools3D web pages open in the browser until the account sign-in lands in the app------*/
-function OpenSpaceTools( strPath )
+function OpenUrl( strUrl )
 {
 	var tSend = {};
 	tSend['sequence_id'] = Math.round(new Date() / 1000);
 	tSend['command'] = "common_openurl";
-	tSend['url'] = SPACETOOLS_URL + (strPath || "");
+	tSend['url'] = strUrl;
 
 	SendWXMessage(JSON.stringify(tSend));
+}
+
+function OpenSpaceTools( strPath ) { OpenUrl(SPACETOOLS_URL + (strPath || "")); }
+
+/*------Model library and gallery: cards from the SpaceTools3D account (spacetools_feed). Until the
+      app sends a feed, each section shows a card that opens the site instead.------*/
+function FormatCount( n )
+{
+	n = Number(n) || 0;
+	return n >= 1000 ? (Math.round(n / 100) / 10).toString().replace(/\.0$/, "") + "k" : String(n);
+}
+
+function ModelCard( item )
+{
+	let sTitle = item["title"] || "";
+	let sAuthor = item["author"] ? '<span class="CardAuthor"><span class="CardAvatar">' +
+		(item["author_avatar"] ? '<img src="' + EscapeHtml(item["author_avatar"]) + '" onerror="this.remove()" alt="" />' : '') +
+		'</span><span class="CardAuthorName">' + EscapeHtml(item["author"]) + '</span></span>' : '<span class="CardAuthor"></span>';
+	let sStats = '';
+	if (item["downloads"] != null)
+		sStats += '<span class="CardStat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19.5h14"/></svg>' + FormatCount(item["downloads"]) + '</span>';
+	if (item["likes"] != null)
+		sStats += '<span class="CardStat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19.5s-7.5-4.4-7.5-9.6A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7.5 2.3c0 5.2-7.5 9.6-7.5 9.6z"/></svg>' + FormatCount(item["likes"]) + '</span>';
+
+	return '<div class="ModelCard" tabindex="0" data-url="' + EscapeHtml(item["url"] || "") + '" data-name="' + EscapeHtml(sTitle.toLocaleLowerCase()) + '" title="' + EscapeHtml(sTitle) + '">' +
+		'<div class="CardImg">' + (item["image"] ? '<img src="' + EscapeHtml(item["image"]) + '" onerror="this.remove()" alt="" />' : '') + '</div>' +
+		'<div class="CardBody"><div class="CardTitle">' + EscapeHtml(sTitle) + '</div>' +
+		'<div class="CardMeta">' + sAuthor + sStats + '</div></div>' +
+		'</div>';
+}
+
+function ShowFeed( strKind, items )
+{
+	items = items || [];
+	let html = items.map(ModelCard).join("");
+	$("[data-feed='" + strKind + "']").html(html);
+	$("[data-empty='" + strKind + "']").each(function () { this.hidden = items.length > 0; });
+	$("[board=home] .SeeAll[onClick*=" + strKind + "]").toggle(items.length > 0);
+	ApplySearch();
+}
+
+function OpenModelCard( card )
+{
+	let url = $(card).attr("data-url") || "";
+	/*----only SpaceTools3D pages open from a card----*/
+	if (url.indexOf(SPACETOOLS_URL) === 0)
+		OpenUrl(url);
 }
 
 /*------Account rows------*/
@@ -284,8 +343,6 @@ var AccountRows = {
   bambu: { row: "#BambuAccount", name: "#BambuUserName", avatar: "#BambuAvatarIcon", dot: "#BambuStatusDot",
            loginCmd: "homepage_bambu_login_or_register", logoutCmd: "homepage_bambu_logout" }
 };
-
-var BAMBU_FOLD_KEY = "OrcaHome_BambuCloudExpanded";
 
 var m_OpenAccountMenu = null;
 
@@ -337,16 +394,14 @@ function OnAccountRowClick(strProvider) {
   }
 }
 
-/*----the menu opens above the row: the account block sits at the bottom of the side bar----*/
 function OpenAccountMenu(strProvider) {
   var account = AccountRows[strProvider];
   var row = $(account.row);
-  var area = document.getElementById("LoginArea");
-  var bottom = area.offsetHeight - (row[0].getBoundingClientRect().top - area.getBoundingClientRect().top) + 6;
+  var top = row[0].offsetTop + row[0].offsetHeight + 4;  /*----read the geometry before writing----*/
   var strHandle = row.data("handle") || "";
 
   $("#AccountMenuHandle").text(strHandle).css("display", strHandle === "" ? "none" : "block");
-  $("#AccountMenu").css("bottom", bottom + "px").addClass("Open");
+  $("#AccountMenu").css("top", top + "px").addClass("Open");
   $(".AccountRow").removeClass("MenuOpen").attr("aria-expanded", "false");
   row.addClass("MenuOpen").attr("aria-expanded", "true");
   m_OpenAccountMenu = strProvider;
@@ -364,24 +419,10 @@ function OnAccountMenuLogout() {
   if (account) SendSimpleCommand(account.logoutCmd);
 }
 
-function SetBambuSectionExpanded(bExpanded, bPersist) {
-  $("#BambuCloudBody").toggleClass("Expanded", bExpanded);
-  $("#BambuAccount").attr("tabindex", bExpanded ? "0" : "-1");
-  $("#BambuCloudHeader").toggleClass("Expanded", bExpanded).attr("aria-expanded", bExpanded ? "true" : "false");
-  if (!bExpanded && m_OpenAccountMenu === "bambu") CloseAccountMenu();
-  // Best effort: the fold is a per-machine convenience, not a synced preference.
-  if (bPersist) { try { localStorage.setItem(BAMBU_FOLD_KEY, bExpanded ? "1" : "0"); } catch (e) {} }
-}
-
-function ToggleBambuSection() {
-  SetBambuSectionExpanded(!$("#BambuCloudBody").hasClass("Expanded"), true);
-}
+/*----the Bambu account is the side bar's account row, always open; kept for the plug-in tip----*/
+function SetBambuSectionExpanded(bExpanded, bPersist) {}
 
 function Set_AccountMenu_Event() {
-  var bExpanded = false;
-  try { bExpanded = localStorage.getItem(BAMBU_FOLD_KEY) === "1"; } catch (e) {}
-  SetBambuSectionExpanded(bExpanded, false);
-
   $(document).mousedown(function (e) {
     if (m_OpenAccountMenu === null) return;
     if ($(e.target).closest("#AccountMenu, .AccountRow").length === 0) CloseAccountMenu();

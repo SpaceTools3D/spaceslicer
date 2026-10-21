@@ -40128,8 +40128,8 @@ msgid "Print history"
 msgstr "Baskı geçmişi"
 
 # AI Translated
-msgid "Search projects"
-msgstr "Projelerde ara"
+msgid "Search models…"
+msgstr "Model ara…"
 
 # AI Translated
 msgid "See all"
@@ -40140,8 +40140,8 @@ msgid "No recent projects yet. Start a new one or open a 3MF file."
 msgstr "Henüz son proje yok. Yeni bir proje başlat ya da bir 3MF dosyası aç."
 
 # AI Translated
-msgid "No projects match your search."
-msgstr "Aramanla eşleşen proje yok."
+msgid "No models match your search."
+msgstr "Aramanla eşleşen model yok."
 
 # AI Translated
 msgid "Models you create on SpaceTools3D will show up here."

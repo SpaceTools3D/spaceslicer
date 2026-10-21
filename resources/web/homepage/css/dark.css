@@ -1,16 +1,17 @@
 /*---- SpaceSlicer home page, dark mode: only the tokens of home.css change. ----*/
 :root
 {
-	--hp-bg: #15121C;
-	--hp-side: #1B1724;
-	--hp-card: #221D2B;
-	--hp-sunken: #2A2434;
-	--hp-border: #2E2838;
-	--hp-text: #ECE9F2;
-	--hp-muted: #9A93A8;
+	--hp-bg: #130F1B;
+	--hp-side: #17121F;
+	--hp-card: #1E1928;
+	--hp-sunken: #27222F;
+	--hp-border: #2C2638;
+	--hp-field-border: #4A3F63;
+	--hp-text: #F1EEF6;
+	--hp-muted: #A39CB1;
 	--hp-violet: #8B63F0;
-	--hp-violet-text: #B9A0FF;
-	--hp-violet-soft: rgba(139, 99, 240, 0.18);
+	--hp-violet-text: #A98BFF;
+	--hp-violet-soft: rgba(139, 99, 240, 0.22);
 	--hp-orange: #F2A65A;
 	--hp-orange-hover: #F6B677;
 	--hp-on-orange: #22140A;

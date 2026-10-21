@@ -84,11 +84,11 @@ static json home_page_strings()
         // TRN Home page side bar: opens the Device tab, where the printers' print history is.
         {"print_history", _u8L("Print history")},
         {"settings", _u8L("Settings")},
-        {"search_projects", _u8L("Search projects")},
+        {"search_models", _u8L("Search models…")},
         // TRN Home page: link beside a section title that opens the full list.
         {"see_all", _u8L("See all")},
         {"no_recent", _u8L("No recent projects yet. Start a new one or open a 3MF file.")},
-        {"no_results", _u8L("No projects match your search.")},
+        {"no_results", _u8L("No models match your search.")},
         {"library_empty", _u8L("Models you create on SpaceTools3D will show up here.")},
         {"gallery_empty", _u8L("Browse ready-to-print models from the SpaceTools3D gallery.")},
         {"open_spacetools", _u8L("Open spacetools3d.com")},
