@@ -4,10 +4,14 @@
 #include <string>
 
 #include "libslic3r_version.h"
+#include <cctype>
 #include <cstring>
+// The macros below are re-checked on every inclusion, so the function needs its own guard.
+#ifndef slic3r_GUI_I18N_brand_
+#define slic3r_GUI_I18N_brand_
 namespace Slic3r { namespace GUI { namespace I18N {
-// SpaceSlicer: arayüzde üst projenin adı görünmez. Çevirisi olsun olmasın her metinde "OrcaSlicer" / "Orca Slicer"
-// uygulamanın adıyla değişir; adres ve dosya adlarının içindekiler (…/OrcaSlicer/…, OrcaSlicer.conf) aynen kalır.
+// SpaceSlicer: the upstream name never shows in the UI. With or without a translation, "OrcaSlicer" / "Orca Slicer"
+// becomes the app name in every text; inside paths and file names (…/OrcaSlicer/…, OrcaSlicer.conf) it stays.
 inline wxString brand(wxString s)
 {
     static const wxString names[] = {wxString("OrcaSlicer"), wxString("Orca Slicer")};
@@ -17,7 +21,8 @@ inline wxString brand(wxString s)
             const size_t end = pos + from.length();
             const bool before = pos > 0 && (s[pos - 1] == '/' || s[pos - 1] == '.' || s[pos - 1] == '-' || s[pos - 1] == '_');
             const bool after  = end < s.length() && (s[end] == '/' || s[end] == '_' ||
-                                (s[end] == '.' && end + 1 < s.length() && wxIsalnum(s[end + 1])));
+                                (s[end] == '.' && end + 1 < s.length() && s[end + 1].IsAscii() &&
+                                 std::isalnum(static_cast<unsigned char>(s[end + 1].GetValue()))));
             if (before || after) { pos = end; continue; }
             s.replace(pos, from.length(), wxString::FromUTF8(SLIC3R_APP_NAME));
             pos += std::strlen(SLIC3R_APP_NAME);
@@ -26,6 +31,7 @@ inline wxString brand(wxString s)
     return s;
 }
 } } }
+#endif /* slic3r_GUI_I18N_brand_ */
 #ifndef _
 #define _(s)    	Slic3r::GUI::I18N::translate((s))
 #define _L(s)    	Slic3r::GUI::I18N::translate((s))

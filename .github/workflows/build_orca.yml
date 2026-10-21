@@ -192,7 +192,10 @@ jobs:
         env:
           ORCA_TESTS_BUILD_ONLY: ${{ inputs.arch == 'arm64' && '1' || '' }}
         run: |
-          ./build_release_macos.sh -s -n -x ${{ !vars.SELF_HOSTED && '-j 3' || '' }} -a ${{ inputs.arch }} -t 10.15 ${{ inputs.arch == 'arm64' && '-T' || '' }}
+          # SpaceSlicer: compiler errors also become annotations, readable without the raw log
+          set -o pipefail
+          ./build_release_macos.sh -s -n -x ${{ !vars.SELF_HOSTED && '-j 3' || '' }} -a ${{ inputs.arch }} -t 10.15 ${{ inputs.arch == 'arm64' && '-T' || '' }} 2>&1 | tee build_log.txt \
+            || { grep -E "error:" build_log.txt | head -40 | sed 's/^/::error::/'; exit 1; }
 
       - name: Pack unit tests mac
         if: runner.os == 'macOS' && !inputs.macos-combine-only && inputs.arch == 'arm64'
@@ -471,7 +474,13 @@ jobs:
           $deps = (Split-Path "${{ github.workspace }}/${{ inputs.cache-path }}").Replace('\', '/')
           # -l compiles with Visual Studio's clang-cl and -x builds with Ninja; --msvc --msbuild is cl under the Visual Studio generator.
           $flags = if ("${{ inputs.compiler }}" -eq "clang") { "-l", "-x" } else { "--msvc", "--msbuild" }
-          .\build_win.bat -s --tests -i --arch ${{ inputs.arch }} --build-dir $env:BUILD_DIR --deps-dir $deps @flags
+          # SpaceSlicer: compiler errors also become annotations, readable without the raw log
+          .\build_win.bat -s --tests -i --arch ${{ inputs.arch }} --build-dir $env:BUILD_DIR --deps-dir $deps @flags 2>&1 | Tee-Object -FilePath build_log.txt
+          $code = $LASTEXITCODE
+          if ($code -ne 0) {
+            Select-String -Path build_log.txt -Pattern ': (fatal )?error ' | Select-Object -First 40 | ForEach-Object { Write-Output "::error::$($_.Line.Trim())" }
+            exit $code
+          }
         shell: pwsh
 
       - name: Build system preset cache (Windows)
@@ -609,7 +618,9 @@ jobs:
         run: |
           # Build + tar the unit tests (-t) on both Linux legs so each arch
           # (x86_64 + aarch64) gets tested by its own unit_tests_linux_* job.
-          ./build_linux.sh -istrlL
+          set -o pipefail
+          ./build_linux.sh -istrlL 2>&1 | tee build_log.txt \
+            || { grep -E "error:" build_log.txt | head -40 | sed 's/^/::error::/'; exit 1; }
           ./scripts/check_appimage_libs.sh ./build/package ./build/package/bin/orca-slicer
           appimage=./build/OrcaSlicer_Linux_AppImage${{ env.ubuntu-ver-str }}${{ env.arch_suffix }}_${{ env.ver }}.AppImage
           mv -n ./build/OrcaSlicer_Linux_V${{ env.ver_pure }}.AppImage "$appimage"
