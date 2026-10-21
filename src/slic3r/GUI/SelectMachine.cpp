@@ -3272,7 +3272,7 @@ void SelectMachineDialog::show_timelapse_folder_popup()
     }
 
     // build popup with rounded corners + themed border
-    const wxColour popup_bg     = wxGetApp().dark_mode() ? wxColour("#26202F") : wxColour(0xF0, 0xF0, 0xF0);
+    const wxColour popup_bg     = wxGetApp().dark_mode() ? wxColour("#221C2C") : wxColour(0xF0, 0xF0, 0xF0);
     const wxColour popup_border = StateColor::darkModeColorFor(wxColour(0xCE, 0xCE, 0xCE));
     m_timelapse_storage_popup = new PopupWindow(this, wxBORDER_NONE);
     m_timelapse_storage_popup->SetBackgroundColour(popup_bg);

@@ -1,68 +1,27 @@
-body
+/*---- SpaceSlicer: dark values of the design tokens in model.css (the home page's dark.css) ----*/
+:root
 {
-	background-color:#15111E;
-	color: #B3B3B5;
-}
-
-a
-{
-	color: #7B4FE0;
+	--ss-bg: #130F1B;
+	--ss-card: #1E1928;
+	--ss-sunken: #27222F;
+	--ss-border: #2C2638;
+	--ss-text: #F1EEF6;
+	--ss-muted: #A39CB1;
+	--ss-violet: #8B63F0;
+	--ss-violet-text: #A98BFF;
+	--ss-violet-soft: rgba(139, 99, 240, 0.22);
+	color-scheme: dark;
 }
 
 .ZScrol::-webkit-scrollbar-thumb {/*滚动条里面小方块*/
-    background-color: #939594;
+    background-color: #3A3249;
 }
 
 .ZScrol::-webkit-scrollbar-track {/*滚动条里面轨道*/
-        background: #161817;
+        background: #130F1B;
 }
 
 #EmptyArea img
 {
 	content:url(../img/null2.png);
-}
-
-.Text_Title
-{
-	color: #EFEFF0;
-}
-
-.Text_Value
-{
-	color: #B3B3B5;
-}
-
-.Text_TitleBoard
-{
-	border-bottom: 1px solid #54545A;
-}
-
-.LeftProcessBar
-{
-	border-left: 2px solid #352D47;
-}
-
-.ProcessBarSelected
-{
-	border-left-color:#7B4FE0;
-}
-
-.Block_BKGA
-{
-	background-color:#241F30;
-}
-
-.InfoBlock
-{
-	background-color:#241F30;
-}
-
-.File_Board
-{
-	background-color:#15111E;
-}
-
-.FileItem
-{
-	background-color:#241F30;
 }

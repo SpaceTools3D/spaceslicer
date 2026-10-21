@@ -60,6 +60,10 @@ public:
     wxWindow* GetOverflowButton() const { return m_overflow_button; }
 
 private:
+    // SpaceSlicer: tab look (transparent tab, violet pill when selected, tile for an icon-only tab)
+    void StyleButton(size_t n);
+
+    Button*                         m_brand{nullptr};   // SpaceSlicer: logo and app name leading the bar
     wxFlexGridSizer*                m_buttons_sizer;
     wxBoxSizer*                     m_sizer;
     // BBS: use Button

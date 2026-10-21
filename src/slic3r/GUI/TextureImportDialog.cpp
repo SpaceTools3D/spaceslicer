@@ -4161,7 +4161,7 @@ void TextureImportDialog::highlight_view_button(int view_index)
 {
     Button* btns[] = { m_btn_view_original, m_btn_view_multicolor };
 
-    // The inactive pill lies on m_tab_panel, which is preview_bg (#EEEEEE -> #352D47), and has to
+    // The inactive pill lies on m_tab_panel, which is preview_bg (#EEEEEE -> #2C2638), and has to
     // read as raised above that strip in both themes — so its fill steps away from the strip in
     // opposite directions. gDarkColors pairs one light tone with one dark tone and cannot express
     // an inversion, so the two are picked here the way filament_swatch_border_colour() does.

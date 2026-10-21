@@ -5,6 +5,9 @@
 #include "GUI_App.hpp"
 #include "wxExtensions.hpp"
 #include "Widgets/Button.hpp"
+#include "Widgets/Label.hpp"
+#include "Widgets/StateColor.hpp"
+#include "libslic3r_version.h"
 
 //BBS set font size
 
@@ -24,6 +27,18 @@
 
 wxDEFINE_EVENT(wxCUSTOMEVT_NOTEBOOK_SEL_CHANGED, wxCommandEvent);
 
+// SpaceSlicer tab bar. The bar is the same deep violet in light and dark mode, so these colours are
+// fixed rather than palette colours (the home page's dark tokens: --hp-violet, --hp-text).
+static const wxColour TAB_BAR_BG("#1A1424");
+static const wxColour TAB_TILE_BG("#2A2336");   // hover, and the resting look of an icon-only tab
+static const wxColour TAB_SELECTED_BG("#8B63F0");
+static const wxColour TAB_TEXT("#F1EEF6");
+
+static wxSize tab_button_min_size(bool icon_only, int em)
+{
+    return {(icon_only ? 52 : 120) * em / 10, 40 * em / 10};
+}
+
 ButtonsListCtrl::ButtonsListCtrl(wxWindow *parent, wxBoxSizer* side_tools) :
     wxControl(parent, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxBORDER_NONE | wxTAB_TRAVERSAL)
 {
@@ -31,26 +46,30 @@ ButtonsListCtrl::ButtonsListCtrl(wxWindow *parent, wxBoxSizer* side_tools) :
     SetDoubleBuffered(true);
 #endif //__WINDOWS__
 
-    wxColour default_btn_bg;
-#ifdef __APPLE__
-    default_btn_bg = wxColour("#1B1430"); // Gradient #414B4E
-#else
-    default_btn_bg = wxColour("#120E1C"); // Gradient #414B4E
-#endif
-
-   
-    SetBackgroundColour(default_btn_bg);
+    SetBackgroundColour(TAB_BAR_BG);
 
     int em = em_unit(this);// Slic3r::GUI::wxGetApp().em_unit();
-    // BBS: no gap
-    m_btn_margin = 0; // std::lround(0.3 * em);
+    // SpaceSlicer: tabs are separate pills with a small gap
+    m_btn_margin = std::lround(0.4 * em);
     m_line_margin = std::lround(0.1 * em);
 
     m_sizer = new wxBoxSizer(wxHORIZONTAL);
     this->SetSizer(m_sizer);
 
+    // SpaceSlicer: the logo and the app name lead the bar. A Button keeps its own colours through the
+    // dark-mode walk, which a wxStaticText would not; it has no action of its own.
+    m_brand = new Button(this, wxString::FromUTF8(SLIC3R_APP_NAME), "OrcaSlicer", wxNO_BORDER, 30);
+    m_brand->SetFont(Label::Head_20);
+    m_brand->SetIconSpacing(FromDIP(10));
+    m_brand->SetCornerRadius(0);
+    m_brand->SetBackgroundColor(StateColor(std::pair{TAB_BAR_BG, (int) StateColor::Normal}));
+    m_brand->SetBorderColor(StateColor(std::pair{TAB_BAR_BG, (int) StateColor::Normal}));
+    m_brand->SetTextColor(StateColor(std::pair{TAB_TEXT, (int) StateColor::Normal}));
+    m_brand->SetCanFocus(false);
+    m_sizer->Add(m_brand, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxRIGHT, FromDIP(12));
+
     m_buttons_sizer = new wxFlexGridSizer(1, m_btn_margin, m_btn_margin);
-    m_sizer->Add(m_buttons_sizer, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxBOTTOM, m_btn_margin);
+    m_sizer->Add(m_buttons_sizer, 0, wxALIGN_CENTER_VERTICAL | wxTOP | wxBOTTOM, FromDIP(8));
 
     if (side_tools != NULL) {
         m_sizer->AddStretchSpacer(1);
@@ -61,7 +80,7 @@ ButtonsListCtrl::ButtonsListCtrl(wxWindow *parent, wxBoxSizer* side_tools) :
                 item_win->Reparent(this);
             }
         }
-        m_sizer->Add(side_tools, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT | wxBOTTOM, m_btn_margin);
+        m_sizer->Add(side_tools, 0, wxALIGN_CENTER_VERTICAL | wxRIGHT, FromDIP(4));
     }
 
     // BBS: disable custom paint
@@ -80,7 +99,7 @@ void ButtonsListCtrl::OnPaint(wxPaintEvent&)
         return;
 
     wxColour selected_btn_bg("#1F8EEA");
-    wxColour default_btn_bg("#1B1430"); // Gradient #414B4E
+    wxColour default_btn_bg("#1A1424"); // Gradient #414B4E
     const wxColour& btn_marker_color = Slic3r::GUI::wxGetApp().get_color_hovered_btn_label();
 
     // highlight selected notebook button
@@ -114,10 +133,12 @@ void ButtonsListCtrl::Rescale()
     //m_mode_sizer->msw_rescale();
     int em = em_unit(this);
     for (Button* btn : m_pageButtons) {
-        //BBS
-        btn->SetMinSize({(btn->GetLabel().empty() ? 40 : 132) * em / 10, 36 * em / 10});
+        btn->SetMinSize(tab_button_min_size(btn->GetLabel().empty(), em));
+        btn->SetCornerRadius(FromDIP(10));
         btn->Rescale();
     }
+    if (m_brand)
+        m_brand->Rescale();
 
     // BBS: no gap
     //m_btn_margin = std::lround(0.3 * em);
@@ -128,48 +149,39 @@ void ButtonsListCtrl::Rescale()
     m_sizer->Layout();
 }
 
+void ButtonsListCtrl::StyleButton(size_t n)
+{
+    if (n >= m_pageButtons.size())
+        return;
+    Button* btn = m_pageButtons[n];
+    const bool selected = static_cast<int>(n) == m_selection;
+    const wxColour& rest = btn->GetLabel().empty() ? TAB_TILE_BG : TAB_BAR_BG;
+    StateColor bg = selected ? StateColor(std::pair{TAB_SELECTED_BG, (int) StateColor::Normal})
+                             : StateColor(std::pair{TAB_TILE_BG, (int) StateColor::Hovered}, std::pair{rest, (int) StateColor::Normal});
+    btn->SetBackgroundColor(bg);
+    btn->SetBorderColor(bg);
+    btn->SetTextColor(StateColor(std::pair{TAB_TEXT, (int) StateColor::Normal}));
+}
+
 void ButtonsListCtrl::SetSelection(int sel)
 {
     if (m_selection == sel && sel >= 0 && sel < static_cast<int>(m_pageButtons.size()))
         return;
-    // BBS: change button color
-    wxColour selected_btn_bg("#7B4FE0");    // Gradient #7B4FE0
-    if (m_selection >= 0 && m_selection < static_cast<int>(m_pageButtons.size())) {
-        StateColor bg_color = StateColor(
-        std::pair{wxColour(107, 107, 107), (int) StateColor::Hovered},
-        std::pair{wxColour(59, 68, 70), (int) StateColor::Normal});
-        m_pageButtons[m_selection]->SetBackgroundColor(bg_color);
-        StateColor text_color = StateColor(
-        std::pair{wxColour(254,254, 254), (int) StateColor::Normal}
-        );
-        m_pageButtons[m_selection]->SetTextColor(text_color);
-    }
 
-    if (sel < 0 || sel >= static_cast<int>(m_pageButtons.size())) {
-        m_selection = -1;
-        Refresh();
-        return;
-    }
+    const int previous = m_selection;
+    m_selection = (sel < 0 || sel >= static_cast<int>(m_pageButtons.size())) ? -1 : sel;
+    if (previous >= 0)
+        StyleButton(previous);
+    if (m_selection >= 0)
+        StyleButton(m_selection);
 
-    m_selection = sel;
-
-    StateColor bg_color = StateColor(
-        std::pair{wxColour(123, 79, 224), (int) StateColor::Hovered},
-        std::pair{wxColour(123,79, 224), (int) StateColor::Normal});
-    m_pageButtons[m_selection]->SetBackgroundColor(bg_color);
-
-    StateColor text_color = StateColor(
-        std::pair{wxColour(254, 254, 254), (int) StateColor::Normal}
-        );
-    m_pageButtons[m_selection]->SetTextColor(text_color);
-    
     Refresh();
 }
 
 bool ButtonsListCtrl::InsertPage(size_t n, const wxString &text, bool bSelect /* = false*/, const std::string &bmp_name /* = ""*/, const wxBitmap &bmp /* = wxNullBitmap */)
 {
     Button * btn = new Button(this, text, bmp_name, wxNO_BORDER);
-    btn->SetCornerRadius(0);
+    btn->SetCornerRadius(FromDIP(10));
 
     if (bmp_name.empty() && bmp.IsOk())
         btn->SetIcon(bmp);
@@ -185,17 +197,8 @@ bool ButtonsListCtrl::InsertPage(size_t n, const wxString &text, bool bSelect /*
     }
 
     int em = em_unit(this);
-    //BBS set size for button
-    btn->SetMinSize({(text.empty() ? 40 : 136) * em / 10, 36 * em / 10});
-
-    StateColor bg_color = StateColor(
-        std::pair{wxColour(107, 107, 107), (int) StateColor::Hovered},
-        std::pair{wxColour(59, 68, 70), (int) StateColor::Normal});
-
-    btn->SetBackgroundColor(bg_color);
-    StateColor text_color = StateColor(
-        std::pair{wxColour(254,254, 254), (int) StateColor::Normal});
-    btn->SetTextColor(text_color);
+    btn->SetMinSize(tab_button_min_size(text.empty(), em));
+    btn->SetPaddingSize(wxSize(FromDIP(16), FromDIP(8)));
     btn->Bind(wxEVT_BUTTON, [this, btn](wxCommandEvent& event) {
         if (auto it = std::find(m_pageButtons.begin(), m_pageButtons.end(), btn); it != m_pageButtons.end()) {
             auto sel = it - m_pageButtons.begin();
@@ -209,6 +212,9 @@ bool ButtonsListCtrl::InsertPage(size_t n, const wxString &text, bool bSelect /*
     });
     Slic3r::GUI::wxGetApp().UpdateDarkUI(btn);
     m_pageButtons.insert(m_pageButtons.begin() + n, btn);
+    if (m_selection >= static_cast<int>(n))
+        ++m_selection;
+    StyleButton(n);
     m_pageLabels.insert(m_pageLabels.begin() + n, text); // ORCA
     m_pageIcons.insert(m_pageIcons.begin() + n, bmp_name);
     m_buttons_sizer->Insert(n, new wxSizerItem(btn));
@@ -266,8 +272,9 @@ void ButtonsListCtrl::SetCompact(size_t n, bool compact)
 {
     int em = em_unit(this);
     Button* btn = m_pageButtons[n];
-    btn->SetMinSize({(compact ? 40 : 136) * em / 10, 36 * em / 10});
+    btn->SetMinSize(tab_button_min_size(compact, em));
     btn->SetLabel(compact ? "" : m_pageLabels[n]);
+    StyleButton(n);
 }
 
 wxString ButtonsListCtrl::GetPageText(size_t n) const
@@ -294,8 +301,8 @@ void ButtonsListCtrl::SetOverflowButton(wxWindow* button)
     m_overflow_button = button;
 
     if (m_overflow_button != nullptr)
-        // Right after the tab buttons (index 0), ahead of any stretch spacer / side_tools.
-        m_sizer->Insert(1, m_overflow_button, 0, wxALIGN_CENTER_VERTICAL | wxLEFT | wxBOTTOM, m_btn_margin);
+        // Right after the brand (index 0) and the tab buttons (index 1), ahead of any stretch spacer / side_tools.
+        m_sizer->Insert(2, m_overflow_button, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, m_btn_margin);
 
     m_sizer->Layout();
 }

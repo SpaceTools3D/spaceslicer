@@ -80,7 +80,7 @@ MediaFilePanel::MediaFilePanel(wxWindow * parent)
     for (auto b : {m_button_year, m_button_month, m_button_all}) {
         b->SetBackgroundColor(StateColor());
         b->SetTextColor(StateColor(
-            std::make_pair(0x1B1430, (int) StateColor::Checked),
+            std::make_pair(0x1A1424, (int) StateColor::Checked),
             std::make_pair(*wxLIGHT_GREY, (int) StateColor::Hovered),
             std::make_pair(0xABACAC, (int) StateColor::Normal)
         ));

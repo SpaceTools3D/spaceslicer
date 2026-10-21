@@ -54,7 +54,7 @@ SideButton::SideButton(wxWindow* parent, wxString text, wxString icon, long stly
     background_color.append(0x7B4FE0, StateColor::Normal);
     background_color.setTakeFocusedAsHovered(false);
 
-    SetBottomColour(wxColour("#1B1430"));
+    SetBottomColour(wxColour("#1A1424"));
 
     state_handler.attach({ &border_color, &text_color, &background_color });
     state_handler.update_binds();
@@ -220,7 +220,11 @@ void SideButton::dorender(wxDC& dc, wxDC& text_dc)
 
     // draw icon style
     if (icon.bmp().IsOk()) {
-        if (radius > 1e-5) {
+        if (radius > 1e-5 && layout_style == 1) {
+            // SpaceSlicer: a stand-alone icon button, rounded on every side
+            dc.DrawRoundedRectangle(0, 0, size.x, size.y, radius);
+        }
+        else if (radius > 1e-5) {
             dc.DrawRoundedRectangle(0, 0, size.x, size.y, radius);
             dc.DrawRectangle(radius, 0, size.x - radius, size.y);
             dc.SetPen(wxNullPen);

@@ -546,6 +546,7 @@ public:
     SideButton* m_slice_option_btn{ nullptr };
     SideButton* m_print_btn{ nullptr };
     SideButton* m_print_option_btn{ nullptr };
+    SideButton* m_account_btn{ nullptr };   // SpaceSlicer: opens the Home page, where the account row is
 
     SidePopup*  m_slice_option_pop_up{ nullptr };
 

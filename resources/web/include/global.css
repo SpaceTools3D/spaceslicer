@@ -36,24 +36,24 @@
   
 @media (prefers-color-scheme: dark) { 
 :root {
-	--main-color			: #5B35C4;
-	--main-color-hover		: #6A3FD6;
+	--main-color			: #8B63F0;
+	--main-color-hover		: #9D7AF3;
 	--main-color-fixed		: #7B4FE0;
-	--bg-color				: #1C1826;
-	--bg-color-secondary	: #231E2E;
-	--bg-color-alt			: #15111E;
+	--bg-color				: #17121F;
+	--bg-color-secondary	: #1E1928;
+	--bg-color-alt			: #130F1B;
 	--fg-color-text			: #EFEFF0;
 	--fg-color-label		: #B2B3B5;
 	--fg-color-disabled		: #65656A;
-	--focus-bg-item			: #2E2347;
-	--focus-bg-box			: #2A2438;
+	--focus-bg-item			: #342653;
+	--focus-bg-box			: #231A34;
 	--border-color			: #3D3452;
 	--icon-color			: #949494;
 	--button-fg-light		: #FEFEFE;
 	--button-fg-text		: #EFEFF0;
 	--button-fg-disabled	: #818183;
-	--button-bg-normal		: #2E2740;
-	--button-bg-hover		: #3B3251;
+	--button-bg-normal		: #27222F;
+	--button-bg-hover		: #322B3F;
 	--button-bg-disabled	: var(--button-bg-normal);
 	--button-bg-alert		: #E14747;
 }

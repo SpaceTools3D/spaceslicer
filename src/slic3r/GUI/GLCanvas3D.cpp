@@ -187,7 +187,7 @@ using namespace std::string_view_literals;
 static constexpr const float TRACKBALLSIZE = 0.8f;
 
 static Slic3r::ColorRGBA DEFAULT_BG_LIGHT_COLOR      = { 0.906f, 0.906f, 0.906f, 1.0f };
-static Slic3r::ColorRGBA DEFAULT_BG_LIGHT_COLOR_DARK = { 0.180f, 0.161f, 0.235f, 1.0f }; // SpaceSlicer: deep violet night
+static Slic3r::ColorRGBA DEFAULT_BG_LIGHT_COLOR_DARK = { 0.075f, 0.059f, 0.106f, 1.0f }; // SpaceSlicer --hp-bg #130F1B
 static Slic3r::ColorRGBA ERROR_BG_LIGHT_COLOR        = { 0.753f, 0.192f, 0.039f, 1.0f };
 static Slic3r::ColorRGBA ERROR_BG_LIGHT_COLOR_DARK   = { 0.753f, 0.192f, 0.039f, 1.0f };
 

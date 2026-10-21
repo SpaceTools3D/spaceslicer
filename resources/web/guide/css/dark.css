@@ -6,7 +6,7 @@
 
 body
 {
-	background-color:#1C1826; /* ORCA match background color */
+	background-color:#17121F; /* ORCA match background color */
 	color: #efeff0;
 }
 
@@ -45,7 +45,7 @@ body
 /*----Region---*/
 .RegionItem:hover
 {
-	background-color:#352D47;
+	background-color:#2C2638;
 }
 
 .RegionSelected:hover

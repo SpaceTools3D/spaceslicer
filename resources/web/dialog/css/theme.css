@@ -65,7 +65,7 @@
 }
 
 :root[data-orca-theme="dark"] {
-  /* The app-injected border (var(--orca-border) ≈ #231E2E in dark) sits almost on top of
+  /* The app-injected border (var(--orca-border) ≈ #1E1928 in dark) sits almost on top of
      the dark panels; lift the border roles a touch so dividers/outlines stay visible. */
   --border: #3D3452;
   --border-strong: #3D3452;
@@ -81,11 +81,11 @@
   --plugin-status-danger-bg: rgba(255, 123, 114, 0.16);
   --plugin-status-ok-bg: rgba(55, 200, 113, 0.16);
   --plugin-status-warn-bg: rgba(240, 180, 90, 0.18);
-  --plugin-status-inactive-bg: #231E2E;
+  --plugin-status-inactive-bg: #1E1928;
   --plugin-status-inactive-text: #c7ccd2;
   --plugin-source-mine-bg: rgba(123, 79, 224, 0.18);
   --plugin-source-mine-text: #8de5d6;
-  --plugin-source-neutral-bg: #231E2E;
+  --plugin-source-neutral-bg: #1E1928;
   --plugin-source-neutral-text: #c7ccd2;
   --plugin-source-subscribed-bg: rgba(88, 166, 255, 0.18);
   --plugin-source-subscribed-text: #8fc0f0;

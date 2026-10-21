@@ -382,3 +382,107 @@ body
 	margin-top: 20px;
 	margin-right:0;
 }
+/*==== SpaceSlicer design language (same tokens as the home page; css/dark.css redefines them) ====*/
+:root
+{
+	--ss-bg: #F6F5F9;
+	--ss-card: #FFFFFF;
+	--ss-sunken: #ECE9F2;
+	--ss-border: #E2DEEA;
+	--ss-text: #1E1A26;
+	--ss-muted: #6C6579;
+	--ss-violet: #7B4FE0;
+	--ss-violet-text: #6A3FD6;
+	--ss-violet-soft: rgba(123, 79, 224, 0.12);
+}
+
+*
+{
+	font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "SF Pro Text", Roboto, Ubuntu, "Helvetica Neue", sans-serif;
+}
+
+body { background-color: var(--ss-bg); color: var(--ss-muted); }
+a { color: var(--ss-violet-text); }
+.Text_Title { color: var(--ss-text); font-size: 17px; font-weight: 650; }
+.Text_Value { color: var(--ss-muted); }
+.Text_TitleBoard { border-bottom: 1px solid var(--ss-border); }
+
+/*---- left menu: the home page side bar's items ----*/
+#LeftProcessBlock
+{
+	top: 24px;
+	left: 0;
+	width: 263px;
+	height: auto;
+	padding: 6px 0;
+	background-color: var(--ss-card);
+	border: 1px solid var(--ss-border);
+	border-left: 0;
+	border-radius: 0 12px 12px 0;
+}
+
+.LeftProcessBar
+{
+	position: relative;
+	height: 52px;
+	border-left: 0;
+	color: var(--ss-text);
+	font-size: 15px;
+	font-weight: 500;
+}
+
+.LeftProcessBar:hover { background-color: var(--ss-sunken); }
+
+.LeftProcessBar img { margin-left: 24px; width: 22px; height: 22px; }
+.LeftProcessBar span { margin-left: 16px; }
+
+.ProcessBarSelected
+{
+	background-color: var(--ss-violet-soft);
+	font-weight: 600;
+}
+
+.ProcessBarSelected::before
+{
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 4px;
+	background-color: var(--ss-violet);
+}
+
+.ProcessBarSelected span { color: var(--ss-text); }
+
+/*---- content: cards ----*/
+.Block_BKGA { background-color: var(--ss-card); }
+
+.InfoBlock
+{
+	background-color: var(--ss-card);
+	border: 1px solid var(--ss-border);
+	border-radius: 12px;
+	padding: 20px 32px;
+}
+
+.InfoBlock:nth-child(n+2) { margin-top: 16px; }
+
+.File_Board
+{
+	background-color: var(--ss-bg);
+	border-radius: 10px;
+}
+
+.FileItem
+{
+	background-color: var(--ss-card);
+	border: 1px solid var(--ss-border);
+	border-radius: 10px;
+}
+
+.FileItem:hover { border-color: var(--ss-violet); }
+
+.swiper { --swiper-theme-color: var(--ss-violet); --swiper-navigation-color: var(--ss-violet); }
+
+#Model_Preview_Image .swiper-slide img { border-radius: 8px; }

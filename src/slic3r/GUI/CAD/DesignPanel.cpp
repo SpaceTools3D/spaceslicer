@@ -203,7 +203,7 @@ static const DpToken kDpTokens[TokCount] = {
     { wxColour(0x2C,0x2C,0x2E), wxColour(0xE0,0xE0,0xE0) },   // list item text
     { wxColour(0xA0,0xA0,0xA2), wxColour(0x80,0x80,0x80) },   // dimmed list item
     // Prepare's control-outline grey, sampled from its sidebar: #DBDBDB on light, #3D3452 on the
-    // #1C1826 dark panel. Every framed thing in Design uses this so the tab matches.
+    // #17121F dark panel. Every framed thing in Design uses this so the tab matches.
     { wxColour(0xDB,0xDB,0xDB), wxColour(0x4A,0x4A,0x51) },
 };
 static bool     dp_dark()         { return wxGetApp().dark_mode(); }
@@ -446,8 +446,8 @@ DesignPanel::DesignPanel(wxWindow* parent)
     m_toolbar = new wxScrolledWindow(this, wxID_ANY);
     m_toolbar->SetScrollRate(15, 0);
     m_toolbar->ShowScrollbars(wxSHOW_SB_DEFAULT, wxSHOW_SB_NEVER);
-    // Theme-aware tool ribbon: dark uses Orca's elevated surface (#241F30 / hover
-    // #3B3251); light maps onto the app's light chrome so the strip follows the theme.
+    // Theme-aware tool ribbon: dark uses Orca's elevated surface (#1E1928 / hover
+    // #322B3F); light maps onto the app's light chrome so the strip follows the theme.
     m_toolbar->SetBackgroundColour(dp_ribbon_bg());
 
     auto icon_btn = [this](const char* icon, const wxString& tip) {

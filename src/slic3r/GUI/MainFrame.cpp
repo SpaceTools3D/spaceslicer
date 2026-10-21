@@ -1750,7 +1750,8 @@ void MainFrame::fit_tab_labels()
     // Compact (last to first)
     for (size_t i = count - 1; i >= 1; --i) {
         int right = ScreenToClient(m_slice_option_btn->ClientToScreen({})).x;
-        int left  = sizer->GetSize().GetWidth();
+        // The brand sits before the tab buttons, so their right edge is where the free space starts.
+        int left  = sizer->GetPosition().x + sizer->GetSize().GetWidth();
         // The overflow button sits between the tab buttons and the side tools, so it is not free space.
         if (const wxWindow* overflow = ctrl->GetOverflowButton())
             left += overflow->GetSize().GetWidth();
@@ -2253,8 +2254,8 @@ wxBoxSizer* MainFrame::create_side_tools()
 
     auto slice_panel = new wxPanel(this,wxID_ANY,wxDefaultPosition,wxDefaultSize);
     auto print_panel = new wxPanel(this,wxID_ANY,wxDefaultPosition,wxDefaultSize);
-    slice_panel->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#1B1430")));
-    print_panel->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#1B1430")));
+    slice_panel->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#1A1424")));
+    print_panel->SetBackgroundColour(StateColor::darkModeColorFor(wxColour("#1A1424")));
 
     m_slice_btn = new SideButton(slice_panel, _L("Slice plate"), "");
     m_slice_option_btn = new SideButton(slice_panel, "", "sidebutton_dropdown", 0, 14);
@@ -2286,7 +2287,15 @@ wxBoxSizer* MainFrame::create_side_tools()
     sizer->Add(slice_panel);
     sizer->Add(FromDIP(15), 0, 0, 0, 0);
     sizer->Add(print_panel);
-    sizer->Add(FromDIP(19), 0, 0, 0, 0);
+    sizer->Add(FromDIP(15), 0, 0, 0, 0);
+
+    // SpaceSlicer: account shortcut closing the tab bar; the account row itself is on the Home page
+    m_account_btn = new SideButton(this, "", "topbar_account", 0, 22);
+    m_account_btn->SetToolTip(_L("Account"));
+    m_account_btn->Bind(wxEVT_BUTTON, [this](wxCommandEvent&) { select_tab(wxString(TAB_ID_HOME)); });
+    update_side_button_style();
+    sizer->Add(m_account_btn, 0, wxALIGN_CENTER_VERTICAL);
+    sizer->Add(FromDIP(12), 0, 0, 0, 0);
 
     sizer->Layout();
 
@@ -2446,7 +2455,7 @@ wxBoxSizer* MainFrame::create_side_tools()
 
     /*
     Button * aux_btn = new Button(this, _L("Auxiliary"));
-    aux_btn->SetBackgroundColour(0x1B1430);
+    aux_btn->SetBackgroundColour(0x1A1424);
     aux_btn->Bind(wxEVT_BUTTON, [](auto e) {
         wxGetApp().sidebar().show_auxiliary_dialog();
     });
@@ -2605,10 +2614,10 @@ void MainFrame::update_side_button_style()
 
     /*m_slice_btn->SetLayoutStyle(1);
     m_slice_btn->SetTextLayout(SideButton::EHorizontalOrientation::HO_Center, FromDIP(15));
-    m_slice_btn->SetMinSize(wxSize(-1, FromDIP(24)));
-    m_slice_btn->SetCornerRadius(FromDIP(12));
+    m_slice_btn->SetMinSize(wxSize(-1, FromDIP(36)));
+    m_slice_btn->SetCornerRadius(FromDIP(10));
     m_slice_btn->SetExtraSize(wxSize(FromDIP(38), FromDIP(10)));
-    m_slice_btn->SetBottomColour(wxColour(0x1B1430));*/
+    m_slice_btn->SetBottomColour(wxColour(0x1A1424));*/
     StateColor m_btn_bg_enable = StateColor(
         std::pair<wxColour, int>(wxColour(106, 63, 214), StateColor::Pressed),
         std::pair<wxColour, int>(wxColour(48, 221, 112), StateColor::Hovered),
@@ -2616,36 +2625,72 @@ void MainFrame::update_side_button_style()
     );
 
     // m_publish_btn->SetMinSize(wxSize(FromDIP(125), FromDIP(24)));
-    // m_publish_btn->SetCornerRadius(FromDIP(12));
+    // m_publish_btn->SetCornerRadius(FromDIP(10));
     // m_publish_btn->SetBackgroundColor(m_btn_bg_enable);
     // m_publish_btn->SetBorderColor(m_btn_bg_enable);
     // m_publish_btn->SetBackgroundColour(wxColour(59,68,70));
     // m_publish_btn->SetTextColor(StateColor::darkModeColorFor("#FFFFFE"));
 
     m_slice_btn->SetTextLayout(SideButton::EHorizontalOrientation::HO_Left, FromDIP(15));
-    m_slice_btn->SetCornerRadius(FromDIP(12));
+    m_slice_btn->SetCornerRadius(FromDIP(10));
     m_slice_btn->SetExtraSize(wxSize(FromDIP(38), FromDIP(10)));
-    m_slice_btn->SetMinSize(wxSize(-1, FromDIP(24)));
+    m_slice_btn->SetMinSize(wxSize(-1, FromDIP(36)));
 
     m_slice_option_btn->SetTextLayout(SideButton::EHorizontalOrientation::HO_Center);
-    m_slice_option_btn->SetCornerRadius(FromDIP(12));
+    m_slice_option_btn->SetCornerRadius(FromDIP(10));
     m_slice_option_btn->SetExtraSize(wxSize(FromDIP(10), FromDIP(10)));
     m_slice_option_btn->SetIconOffset(FromDIP(2));
-    m_slice_option_btn->SetMinSize(wxSize(FromDIP(24), FromDIP(24)));
+    m_slice_option_btn->SetMinSize(wxSize(FromDIP(32), FromDIP(36)));
 
     m_print_btn->SetTextLayout(SideButton::EHorizontalOrientation::HO_Left, FromDIP(15));
-    m_print_btn->SetCornerRadius(FromDIP(12));
+    m_print_btn->SetCornerRadius(FromDIP(10));
     m_print_btn->SetExtraSize(wxSize(FromDIP(38), FromDIP(10)));
-    m_print_btn->SetMinSize(wxSize(-1, FromDIP(24)));
+    m_print_btn->SetMinSize(wxSize(-1, FromDIP(36)));
 
     m_print_option_btn->SetTextLayout(SideButton::EHorizontalOrientation::HO_Center);
-    m_print_option_btn->SetCornerRadius(FromDIP(12));
+    m_print_option_btn->SetCornerRadius(FromDIP(10));
     m_print_option_btn->SetExtraSize(wxSize(FromDIP(10), FromDIP(10)));
     m_print_option_btn->SetIconOffset(FromDIP(2));
-    m_print_option_btn->SetMinSize(wxSize(FromDIP(24), FromDIP(24)));
+    m_print_option_btn->SetMinSize(wxSize(FromDIP(32), FromDIP(36)));
 
-    // Keep panel backgrounds in sync with SideButton's darkModeColorFor(#1B1430) bottom strip
-    auto bg = StateColor::darkModeColorFor(wxColour("#1B1430"));
+    // SpaceSlicer: Slice is the orange call to action, Print the violet one, both greyed out on the
+    // tab bar's own violet while there is nothing to do. The bar looks the same in both modes.
+    StateColor slice_bg(std::pair{wxColour("#3A3245"), (int) StateColor::Disabled},
+                        std::pair{wxColour("#E0954C"), (int) StateColor::Pressed},
+                        std::pair{wxColour("#F6B677"), (int) StateColor::Hovered},
+                        std::pair{wxColour("#F2A65A"), (int) StateColor::Normal});
+    StateColor slice_text(std::pair{wxColour("#8F86A3"), (int) StateColor::Disabled},
+                          std::pair{wxColour("#22140A"), (int) StateColor::Normal});
+    StateColor print_bg(std::pair{wxColour("#2E2640"), (int) StateColor::Disabled},
+                        std::pair{wxColour("#7B4FE0"), (int) StateColor::Pressed},
+                        std::pair{wxColour("#9D7AF3"), (int) StateColor::Hovered},
+                        std::pair{wxColour("#8B63F0"), (int) StateColor::Normal});
+    StateColor print_text(std::pair{wxColour("#8F86A3"), (int) StateColor::Disabled},
+                          std::pair{wxColour("#FFFFFF"), (int) StateColor::Normal});
+    for (SideButton* btn : {m_slice_btn, m_slice_option_btn}) {
+        btn->SetBackgroundColor(slice_bg);
+        btn->SetBorderColor(slice_bg);
+        btn->SetForegroundColor(slice_text);
+    }
+    for (SideButton* btn : {m_print_btn, m_print_option_btn}) {
+        btn->SetBackgroundColor(print_bg);
+        btn->SetBorderColor(print_bg);
+        btn->SetForegroundColor(print_text);
+    }
+
+    if (m_account_btn) {
+        StateColor account_bg(std::pair{wxColour("#2A2336"), (int) StateColor::Hovered},
+                              std::pair{wxColour("#1A1424"), (int) StateColor::Normal});
+        m_account_btn->SetBackgroundColor(account_bg);
+        m_account_btn->SetBorderColor(StateColor(std::pair{wxColour("#CFC6E3"), (int) StateColor::Normal}));
+        m_account_btn->SetTextLayout(SideButton::EHorizontalOrientation::HO_Center);
+        m_account_btn->SetLayoutStyle(1);
+        m_account_btn->SetCornerRadius(FromDIP(20));
+        m_account_btn->SetMinSize(wxSize(FromDIP(40), FromDIP(40)));
+    }
+
+    // Keep panel backgrounds in sync with SideButton's darkModeColorFor(#1A1424) bottom strip
+    auto bg = StateColor::darkModeColorFor(wxColour("#1A1424"));
     m_slice_btn->GetParent()->SetBackgroundColour(bg);
     m_print_btn->GetParent()->SetBackgroundColour(bg);
 }
@@ -2715,6 +2760,8 @@ void MainFrame::on_dpi_changed(const wxRect& suggested_rect)
     m_print_btn->Rescale();
     m_slice_option_btn->Rescale();
     m_print_option_btn->Rescale();
+    if (m_account_btn)
+        m_account_btn->Rescale();
 
     // update Plater
     wxGetApp().plater()->msw_rescale();

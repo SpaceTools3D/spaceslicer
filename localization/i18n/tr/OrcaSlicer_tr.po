@@ -40154,3 +40154,7 @@ msgstr "SpaceTools3D galerisindeki baskıya hazır modellere göz at."
 # AI Translated
 msgid "Open spacetools3d.com"
 msgstr "spacetools3d.com'u aç"
+
+# AI Translated
+msgid "Account"
+msgstr "Hesap"
