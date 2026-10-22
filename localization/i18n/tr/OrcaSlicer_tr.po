@@ -2783,7 +2783,7 @@ msgid "Rename"
 msgstr "Yeniden adlandır"
 
 msgid "Orca Slicer GUI initialization failed"
-msgstr "Orca Dilimleyici GUI'si başlatılamadı"
+msgstr "SpaceSlicer GUI'si başlatılamadı"
 
 #, boost-format
 msgid "Fatal error, exception: %1%"
@@ -4544,7 +4544,7 @@ msgid "License"
 msgstr "Lisans"
 
 msgid "Orca Slicer is licensed under "
-msgstr "Orca Dilimleyici şu lisansa sahiptir: "
+msgstr "SpaceSlicer şu lisansa sahiptir: "
 
 msgid "GNU Affero General Public License, version 3"
 msgstr "GNU Affero Genel Kamu Lisansı, sürüm 3"
@@ -8064,7 +8064,7 @@ msgid "The 3MF file version is newer than the current OrcaSlicer version."
 msgstr "3mf dosya sürümü mevcut Orca Slicer sürümünden daha yenidir."
 
 msgid "Updating your OrcaSlicer could enable all functionality in the 3MF file."
-msgstr "Orca Dilimleyicinizi güncellemek, 3MF dosyasındaki tüm işlevleri etkinleştirebilir."
+msgstr "SpaceSlicernizi güncellemek, 3MF dosyasındaki tüm işlevleri etkinleştirebilir."
 
 msgid "Current Version: "
 msgstr "Şimdiki versiyonu: "
@@ -13578,7 +13578,7 @@ msgid "Welcome to Orca Slicer"
 msgstr "Orca Slicer'a hoş geldiniz"
 
 msgid "Orca Slicer will be set up in several steps. Let's start!"
-msgstr "Orca Dilimleyici birkaç adımda kurulacaktır. Hadi başlayalım!"
+msgstr "SpaceSlicer birkaç adımda kurulacaktır. Hadi başlayalım!"
 
 msgid "Get Started"
 msgstr "Başla"
@@ -36813,7 +36813,7 @@ msgid ""
 "Did you know that you use the Search tool to quickly find a specific Orca Slicer setting?"
 msgstr ""
 "Arama İşlevselliği\n"
-"Belirli bir Orca Dilimleyici ayarını hızla bulmak için Arama aracını kullandığınızı biliyor muydunuz?"
+"Belirli bir SpaceSlicer ayarını hızla bulmak için Arama aracını kullandığınızı biliyor muydunuz?"
 
 #: resources/data/hints.ini: [hint:Simplify Model]
 msgid ""
