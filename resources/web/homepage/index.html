@@ -25,28 +25,18 @@
 			<span class="AccountText"><span id="UserName" class="AccountName"></span></span>
 		</div>
 
-		<div id="BambuCloudSection">
-			<div id="BambuAccount" class="AccountRow" tabindex="0" role="button" aria-haspopup="true" aria-expanded="false"
-				 onClick="OnAccountRowClick('bambu')">
-				<span class="AccountAvatar">
-					<img id="BambuAvatarIcon" class="AccountAvatarImg" alt="" onerror="OnAvatarLoadError(this)" />
-				</span>
-				<span class="AccountText">
-					<span id="BambuUserName" class="AccountName"></span>
-					<span class="AccountSignIn" data-i18n="login">Login</span>
-				</span>
-				<svg class="AccountChevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>
-			</div>
-			<div id="NoPluginTip">
-				<div id="NoPluginText" class="RedFont"><a class="LinkBtn" onClick="BeginDownloadNetworkPlugin()"></a></div>
-			</div>
-		</div>
-
-		<div id="AccountMenu" role="menu">
-			<div id="AccountMenuHandle" role="presentation"></div>
-			<div id="AccountMenuLogout" role="menuitem" tabindex="0" onClick="OnAccountMenuLogout()">
-				<span data-i18n="log_out">Log Out</span>
-			</div>
+		<!-- SpaceTools account: the app's own sign-in -->
+		<div id="SpaceAccount" class="AccountRow" tabindex="0" role="button" aria-haspopup="true" aria-expanded="false"
+			 onClick="OnAccountRowClick('space')">
+			<span class="AccountAvatar">
+				<img id="SpaceAvatarIcon" class="AccountAvatarImg" alt="" onerror="OnAvatarLoadError(this)" />
+			</span>
+			<span class="AccountText">
+				<span id="SpaceUserName" class="AccountName"></span>
+				<span class="AccountSignIn" data-i18n="spacetools_sign_in">Sign in</span>
+				<span class="AccountSecondary">SpaceTools</span>
+			</span>
+			<svg class="AccountChevron" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5"/></svg>
 		</div>
 	</div>
 
@@ -70,6 +60,24 @@
 	</nav>
 
 	<div id="LeftBottom">
+		<!-- Bambu Cloud, for Bambu printers; secondary to the SpaceTools account -->
+		<div id="BambuCloudSection">
+			<div id="BambuAccount" class="BtnItem AccountRow AccountRowCompact" tabindex="0" role="button" aria-haspopup="true" aria-expanded="false"
+				 onClick="OnAccountRowClick('bambu')">
+				<span class="AccountAvatar">
+					<img id="BambuAvatarIcon" class="AccountAvatarImg" alt="" onerror="OnAvatarLoadError(this)" />
+				</span>
+				<span class="AccountText">
+					<span id="BambuUserName" class="AccountName"></span>
+					<span class="AccountSecondary">Bambu Cloud</span>
+				</span>
+				<span class="AccountSignIn" data-i18n="login">Login</span>
+				<span id="BambuStatusDot"></span>
+			</div>
+			<div id="NoPluginTip">
+				<div id="NoPluginText" class="RedFont"><a class="LinkBtn" onClick="BeginDownloadNetworkPlugin()"></a></div>
+			</div>
+		</div>
 		<div class="BtnItem BtnShortcut" tabindex="0" role="button" onClick="SendSimpleCommand('homepage_goto_device')">
 			<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3.5" width="13" height="17" rx="2"/><path d="M7.5 8h6M7.5 11.5h4"/><circle cx="17" cy="16.5" r="3.5"/><path d="M17 15v1.6l1 .8"/></svg>
 			<span data-i18n="print_history">Print history</span>
@@ -79,6 +87,38 @@
 			<span data-i18n="settings">Settings</span>
 		</div>
 	</div>
+</div>
+
+<div id="AccountMenu" role="menu">
+	<div id="AccountMenuHandle" role="presentation"></div>
+	<div id="AccountMenuSite" class="MenuItem" role="menuitem" tabindex="0" onClick="OpenSpaceTools('library')" data-i18n="spacetools_open_site">Open spacetools3d.com</div>
+	<div id="AccountMenuLogout" class="MenuItem" role="menuitem" tabindex="0" onClick="OnAccountMenuLogout()">
+		<span data-i18n="log_out">Log Out</span>
+	</div>
+</div>
+
+<!-- SpaceTools sign-in: the code the user approves on the website -->
+<div id="LoginScrim" hidden onClick="CancelSpaceLogin()"></div>
+<div id="LoginSheet" role="dialog" aria-modal="true" aria-labelledby="LoginTitle" hidden>
+	<img id="LoginLogo" src="../../images/OrcaSlicer.svg" alt="" />
+	<h2 id="LoginTitle" data-i18n="spacetools_login_title">Sign in with SpaceTools</h2>
+	<div id="LoginWait">
+		<p data-i18n="spacetools_login_step">Approve this code on the page that opened in your browser.</p>
+		<div id="LoginCode">····-····</div>
+		<div id="LoginStatus"><span class="Spinner"></span><span id="LoginStatusText" data-i18n="spacetools_login_waiting">Waiting for approval…</span></div>
+		<div class="LoginActions">
+			<button class="Btn BtnGhost" onClick="CancelSpaceLogin()" data-i18n="cancel">Cancel</button>
+			<button class="Btn BtnPrimary" id="LoginReopen" onClick="SendSimpleCommand('homepage_spacetools_reopen')" data-i18n="spacetools_reopen">Open the page again</button>
+		</div>
+	</div>
+	<div id="LoginError" hidden>
+		<p id="LoginErrorText"></p>
+		<div class="LoginActions">
+			<button class="Btn BtnGhost" onClick="CancelSpaceLogin()" data-i18n="cancel">Cancel</button>
+			<button class="Btn BtnPrimary" onClick="StartSpaceLogin()" data-i18n="try_again">Try again</button>
+		</div>
+	</div>
+	<p id="LoginFoot"></p>
 </div>
 
 <div id="RightBoard">
@@ -124,8 +164,8 @@
 				<div id="HomeLibraryList" class="CardGrid OneRow" data-feed="library"></div>
 				<div class="WebCard" data-empty="library">
 					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l8 4.5v8l-8 4.5-8-4.5V8z"/><path d="M4 8l8 4.5L20 8M12 12.5v8"/></svg>
-					<p data-i18n="library_empty">Models you create on SpaceTools3D will show up here.</p>
-					<button class="Btn BtnGhost" onClick="OpenSpaceTools('library')" data-i18n="open_spacetools">Open spacetools3d.com</button>
+					<p class="EmptyText" data-kind="library">Sign in with your SpaceTools account to see your models here.</p>
+					<button class="Btn BtnGhost EmptyAction" onClick="OnEmptyAction('library')" data-i18n="spacetools_sign_in">Sign in</button>
 				</div>
 			</section>
 
@@ -138,8 +178,8 @@
 				<div id="HomeGalleryList" class="CardGrid OneRow" data-feed="gallery"></div>
 				<div class="WebCard" data-empty="gallery">
 					<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="M4 17l5-4.5 4 3.5 3-2.5 4 3.5"/></svg>
-					<p data-i18n="gallery_empty">Browse ready-to-print models from the SpaceTools3D gallery.</p>
-					<button class="Btn BtnGhost" onClick="OpenSpaceTools('gallery')" data-i18n="open_spacetools">Open spacetools3d.com</button>
+					<p class="EmptyText" data-kind="gallery">Sign in with your SpaceTools account to see the SpaceTools showcase here.</p>
+					<button class="Btn BtnGhost EmptyAction" onClick="OnEmptyAction('gallery')" data-i18n="spacetools_sign_in">Sign in</button>
 				</div>
 			</section>
 		</div>
@@ -169,8 +209,8 @@
 				<div id="LibraryList" class="CardGrid" data-feed="library"></div>
 				<div class="WebCard WebCardTall" data-empty="library">
 					<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l8 4.5v8l-8 4.5-8-4.5V8z"/><path d="M4 8l8 4.5L20 8M12 12.5v8"/></svg>
-					<p data-i18n="library_empty">Models you create on SpaceTools3D will show up here.</p>
-					<button class="Btn BtnGhost" onClick="OpenSpaceTools('library')" data-i18n="open_spacetools">Open spacetools3d.com</button>
+					<p class="EmptyText" data-kind="library">Sign in with your SpaceTools account to see your models here.</p>
+					<button class="Btn BtnGhost EmptyAction" onClick="OnEmptyAction('library')" data-i18n="spacetools_sign_in">Sign in</button>
 				</div>
 			</section>
 		</div>
@@ -185,8 +225,8 @@
 				<div id="GalleryList" class="CardGrid" data-feed="gallery"></div>
 				<div class="WebCard WebCardTall" data-empty="gallery">
 					<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5"/><circle cx="9" cy="10" r="1.6"/><path d="M4 17l5-4.5 4 3.5 3-2.5 4 3.5"/></svg>
-					<p data-i18n="gallery_empty">Browse ready-to-print models from the SpaceTools3D gallery.</p>
-					<button class="Btn BtnGhost" onClick="OpenSpaceTools('gallery')" data-i18n="open_spacetools">Open spacetools3d.com</button>
+					<p class="EmptyText" data-kind="gallery">Sign in with your SpaceTools account to see the SpaceTools showcase here.</p>
+					<button class="Btn BtnGhost EmptyAction" onClick="OnEmptyAction('gallery')" data-i18n="spacetools_sign_in">Sign in</button>
 				</div>
 			</section>
 		</div>

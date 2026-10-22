@@ -200,6 +200,12 @@ svg
 	text-overflow: ellipsis;
 }
 
+.AccountSecondary
+{
+	font-size: 12px;
+	color: var(--hp-muted);
+}
+
 .AccountSignIn
 {
 	font-size: 15px;
@@ -241,19 +247,26 @@ svg
 
 #AccountMenu
 {
-	position: absolute;
-	left: 14px;
-	right: 14px;
+	position: fixed;
 	display: none;
 	padding: 6px;
 	background: var(--hp-card);
 	border: 1px solid var(--hp-border);
 	border-radius: 12px;
 	box-shadow: var(--hp-shadow);
-	z-index: 10;
+	z-index: 30;
 }
 
 #AccountMenu.Open { display: block; }
+
+#AccountMenu .MenuItem
+{
+	padding: 8px 10px;
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+#AccountMenu .MenuItem:hover { background: var(--hp-sunken); }
 
 #AccountMenuHandle
 {
@@ -682,3 +695,100 @@ body.Searching .OneRow
 	.BtnPrimary { min-width: 0; }
 	#ContentBoard { padding: 16px 24px 24px; }
 }
+
+/*---- Bambu Cloud: a compact row above Print history ----*/
+#BambuCloudSection { border-top: 1px solid var(--hp-border); }
+#LeftBottom #BambuAccount { border-top: 0; border-radius: 0; gap: 14px; padding: 0 24px; }
+#BambuAccount .AccountAvatar { width: 28px; height: 28px; border-width: 1px; background-size: 16px; }
+#BambuAccount .AccountName { font-size: 14px; }
+#BambuAccount .AccountSecondary { font-size: 12px; }
+#BambuAccount.SignedIn .AccountSecondary { display: block; }
+#BambuAccount .AccountSignIn { font-size: 13px; }
+#BambuStatusDot { width: 7px; height: 7px; border-radius: 50%; background: var(--hp-border); flex: none; }
+#BambuStatusDot.Online { background: var(--hp-online); }
+#BambuAccount:not(.SignedIn) #BambuStatusDot { display: none; }
+#NoPluginTip { display: none; padding: 0 24px 10px; }
+
+/*---- SpaceTools sign-in sheet ----*/
+#LoginScrim
+{
+	position: fixed;
+	inset: 0;
+	z-index: 40;
+	background: rgba(10, 6, 18, 0.55);
+	backdrop-filter: blur(3px);
+}
+
+#LoginSheet
+{
+	position: fixed;
+	z-index: 41;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: min(420px, calc(100vw - 32px));
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+	padding: 32px 28px 24px;
+	background: var(--hp-card);
+	border: 1px solid var(--hp-border);
+	border-radius: 20px;
+	box-shadow: var(--hp-shadow);
+	text-align: center;
+}
+
+#LoginLogo { width: 56px; height: 56px; border-radius: 14px; }
+
+#LoginSheet h2 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; }
+
+#LoginSheet p { color: var(--hp-muted); max-width: 32ch; }
+
+#LoginWait, #LoginError
+{
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 16px;
+}
+
+#LoginCode
+{
+	width: 100%;
+	padding: 16px;
+	border-radius: 14px;
+	border: 1px dashed var(--hp-field-border);
+	background: var(--hp-bg);
+	font: 700 28px/1 ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+	letter-spacing: 0.12em;
+	color: var(--hp-text);
+	user-select: text;
+}
+
+#LoginStatus { display: flex; align-items: center; gap: 10px; color: var(--hp-muted); font-size: 13px; }
+
+.Spinner
+{
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	border: 2px solid var(--hp-border);
+	border-top-color: var(--hp-violet);
+	animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.LoginActions { width: 100%; display: flex; gap: 10px; }
+.LoginActions .Btn { flex: 1; height: 46px; min-width: 0; }
+.LoginActions .BtnPrimary { flex: 1.6; }
+.LoginActions .Btn:disabled { opacity: 0.5; cursor: default; }
+
+#LoginError p { color: var(--hp-danger); }
+
+#LoginFoot { font-size: 13px; }
+
+@media (prefers-reduced-motion: reduce) { .Spinner { animation-duration: 3s; } }
+#SpaceAccount.SignedIn .AccountSecondary { display: none; }

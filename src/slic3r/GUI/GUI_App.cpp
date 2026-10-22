@@ -7,6 +7,7 @@
 #include "libslic3r/Platform.hpp"
 #include "GUI_App.hpp"
 #include "Shortcuts.hpp"
+#include "SpaceToolsAccount.hpp"
 #include "DeviceCore/DevConfigUtil.h"
 #include "BindDialog.hpp"
 #include "DeviceManager.hpp"
@@ -2525,6 +2526,13 @@ void GUI_App::init_networking_callbacks()
         });
     }
     BOOST_LOG_TRIVIAL(info) << __FUNCTION__<< boost::format(": exit, m_agent=%1%")%m_agent;
+}
+
+SpaceToolsAccount& GUI_App::spacetools()
+{
+    if (!m_spacetools)
+        m_spacetools = std::make_unique<SpaceToolsAccount>();
+    return *m_spacetools;
 }
 
 GUI_App::~GUI_App()
@@ -5384,11 +5392,13 @@ std::string GUI_App::handle_web_request(std::string cmd)
                 "get_login_info",
                 "get_orca_login_info",
                 "get_bambu_login_info",
+                "get_spacetools_info",
             };
             static const std::unordered_set<std::string> stealth_blocked_login_commands = {
                 "homepage_login_or_register",
                 "homepage_orca_login_or_register",
                 "homepage_bambu_login_or_register",
+                "homepage_spacetools_login",
             };
             if (app_config->get_stealth_mode() && stealth_blocked_info_commands.count(command_str)) {
                 CallAfter([] {
@@ -5416,6 +5426,8 @@ std::string GUI_App::handle_web_request(std::string cmd)
                             this->request_login(true, ORCA_CLOUD_PROVIDER);
                         else if (command_str == "homepage_bambu_login_or_register")
                             this->request_login(true, BBL_CLOUD_PROVIDER);
+                        else if (command_str == "homepage_spacetools_login")
+                            this->spacetools().start_login();
                     }
                 });
                 return "";
@@ -5486,6 +5498,27 @@ std::string GUI_App::handle_web_request(std::string cmd)
             }
             else if (command_str.compare("homepage_openproject") == 0) {
                 this->request_open_project({});
+            }
+            // SpaceSlicer home page: SpaceTools account
+            else if (command_str == "get_spacetools_info") {
+                CallAfter([this] { spacetools().refresh(); });
+            }
+            else if (command_str == "homepage_spacetools_login") {
+                CallAfter([this] { spacetools().start_login(); });
+            }
+            else if (command_str == "homepage_spacetools_reopen") {
+                CallAfter([this] { spacetools().open_verification_page(); });
+            }
+            else if (command_str == "homepage_spacetools_cancel") {
+                CallAfter([this] { spacetools().cancel_login(); });
+            }
+            else if (command_str == "homepage_spacetools_logout") {
+                CallAfter([this] { spacetools().logout(); });
+            }
+            else if (command_str == "homepage_spacetools_open") {
+                const std::string id    = root.get<std::string>("data.id", std::string());
+                const std::string title = root.get<std::string>("data.title", std::string());
+                CallAfter([this, id, title] { spacetools().open_library_item(id, title); });
             }
             // SpaceSlicer home page: sidebar shortcuts
             else if (command_str.compare("homepage_open_preferences") == 0) {

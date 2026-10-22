@@ -15,6 +15,13 @@ function OnInit()
 
 	SendMsg_GetLoginInfo();
 	SendMsg_GetBambuLoginInfo();
+	SendSimpleCommand("get_spacetools_info");
+	SetSpaceSignedIn(false);
+	let foot = document.getElementById("LoginFoot");
+	let reg = document.createElement("a");
+	reg.className = "LinkBtn";
+	reg.onclick = function () { OpenSpaceTools("register"); };
+	AppendTemplate(foot, T("spacetools_no_account", "No account yet? <a>Create one on spacetools3d.com</a>"), reg);
 	SendMsg_GetRecentFile();
 
 	Set_AccountMenu_Event();
@@ -68,6 +75,18 @@ function HandleStudio( pVal )
 		$("#NoPluginTip").css("display", bMissing ? "block" : "none");
 		$("#BambuAccount").toggleClass("Disabled", bMissing).attr("aria-disabled", bMissing ? "true" : null);
 		if (bMissing) SetBambuSectionExpanded(true, false);
+	} else if (strCmd == "spacetools_userlogin") {
+		var u = pVal["data"] || {};
+		SetAccountSignedIn("space", u["picture"], u["name"] || u["email"], u["email"]);
+		SetSpaceSignedIn(true);
+		CloseSpaceLogin();
+	} else if (strCmd == "spacetools_useroffline") {
+		SetAccountSignedOut("space");
+		SetSpaceSignedIn(false);
+	} else if (strCmd == "spacetools_login_code") {
+		ShowSpaceLoginCode(pVal["data"]["user_code"]);
+	} else if (strCmd == "spacetools_login_error") {
+		ShowSpaceLoginError(pVal["data"]["message"]);
 	} else if (strCmd == "spacetools_feed") {
 		ShowFeed(pVal["data"]["kind"], pVal["data"]["items"]);
 	} else if (strCmd == "SetLoginPanelVisibility") {
@@ -310,7 +329,11 @@ function ModelCard( item )
 	if (item["likes"] != null)
 		sStats += '<span class="CardStat"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19.5s-7.5-4.4-7.5-9.6A4.1 4.1 0 0 1 12 7.6a4.1 4.1 0 0 1 7.5 2.3c0 5.2-7.5 9.6-7.5 9.6z"/></svg>' + FormatCount(item["likes"]) + '</span>';
 
-	return '<div class="ModelCard" tabindex="0" data-url="' + EscapeHtml(item["url"] || "") + '" data-name="' + EscapeHtml(sTitle.toLocaleLowerCase()) + '" title="' + EscapeHtml(sTitle) + '">' +
+	if (item["price"] != null && item["price"] !== "")
+		sStats += '<span class="CardStat CardPrice">' + EscapeHtml((item["currency"] === "USD" ? "$" : "") + Number(item["price"]).toFixed(2) + (item["currency"] && item["currency"] !== "USD" ? " " + item["currency"] : "")) + '</span>';
+	let sOpen = item["can_open"] ? ' data-open-id="' + EscapeHtml(item["id"]) + '"' : '';
+
+	return '<div class="ModelCard" tabindex="0"' + sOpen + ' data-url="' + EscapeHtml(item["url"] || "") + '" data-name="' + EscapeHtml(sTitle.toLocaleLowerCase()) + '" title="' + EscapeHtml(sTitle) + '">' +
 		'<div class="CardImg">' + (item["image"] ? '<img src="' + EscapeHtml(item["image"]) + '" onerror="this.remove()" alt="" />' : '') + '</div>' +
 		'<div class="CardBody"><div class="CardTitle">' + EscapeHtml(sTitle) + '</div>' +
 		'<div class="CardMeta">' + sAuthor + sStats + '</div></div>' +
@@ -329,15 +352,27 @@ function ShowFeed( strKind, items )
 
 function OpenModelCard( card )
 {
+	let id = $(card).attr("data-open-id");
+	if (id) {
+		/*----a 3MF from the account's library opens straight into the plater----*/
+		var tSend = {};
+		tSend['sequence_id'] = Math.round(new Date() / 1000);
+		tSend['command'] = "homepage_spacetools_open";
+		tSend['data'] = { id: id, title: $(card).find(".CardTitle").text() };
+		SendWXMessage(JSON.stringify(tSend));
+		return;
+	}
 	let url = $(card).attr("data-url") || "";
-	/*----only SpaceTools3D pages open from a card----*/
-	if (url.indexOf(SPACETOOLS_URL) === 0)
+	/*----the site or a shop listing opens in the browser----*/
+	if (url.indexOf("https://") === 0)
 		OpenUrl(url);
 }
 
 /*------Account rows------*/
 
 var AccountRows = {
+  space: { row: "#SpaceAccount", name: "#SpaceUserName", avatar: "#SpaceAvatarIcon", dot: null,
+           loginCmd: null, logoutCmd: "homepage_spacetools_logout" },
   orca:  { row: "#OrcaAccount",  name: "#UserName",      avatar: "#UserAvatarIcon",  dot: null,
            loginCmd: "homepage_orca_login_or_register",  logoutCmd: "homepage_orca_logout" },
   bambu: { row: "#BambuAccount", name: "#BambuUserName", avatar: "#BambuAvatarIcon", dot: "#BambuStatusDot",
@@ -386,7 +421,8 @@ function OnAccountRowClick(strProvider) {
 
   if (!row.hasClass("SignedIn")) {
     CloseAccountMenu();
-    SendSimpleCommand(account.loginCmd);
+    if (strProvider === "space") StartSpaceLogin();
+    else SendSimpleCommand(account.loginCmd);
   } else if (m_OpenAccountMenu === strProvider) {
     CloseAccountMenu();
   } else {
@@ -397,11 +433,16 @@ function OnAccountRowClick(strProvider) {
 function OpenAccountMenu(strProvider) {
   var account = AccountRows[strProvider];
   var row = $(account.row);
-  var top = row[0].offsetTop + row[0].offsetHeight + 4;  /*----read the geometry before writing----*/
+  var r = row[0].getBoundingClientRect();     /*----read the geometry before writing----*/
   var strHandle = row.data("handle") || "";
+  var menu = $("#AccountMenu");
 
   $("#AccountMenuHandle").text(strHandle).css("display", strHandle === "" ? "none" : "block");
-  $("#AccountMenu").css("top", top + "px").addClass("Open");
+  $("#AccountMenuSite").toggle(strProvider === "space");
+  menu.css({left: (r.left + 12) + "px", width: (r.width - 24) + "px", top: "", bottom: ""}).addClass("Open");
+  /*----under the row, or above it when the row sits at the bottom of the side bar----*/
+  if (r.bottom + menu.outerHeight() + 8 > window.innerHeight) menu.css("top", (r.top - menu.outerHeight() - 4) + "px");
+  else menu.css("top", (r.bottom + 4) + "px");
   $(".AccountRow").removeClass("MenuOpen").attr("aria-expanded", "false");
   row.addClass("MenuOpen").attr("aria-expanded", "true");
   m_OpenAccountMenu = strProvider;
@@ -419,7 +460,7 @@ function OnAccountMenuLogout() {
   if (account) SendSimpleCommand(account.logoutCmd);
 }
 
-/*----the Bambu account is the side bar's account row, always open; kept for the plug-in tip----*/
+/*----the Bambu account row is always shown; kept for the plug-in tip----*/
 function SetBambuSectionExpanded(bExpanded, bPersist) {}
 
 function Set_AccountMenu_Event() {
@@ -430,14 +471,70 @@ function Set_AccountMenu_Event() {
 
   $(document).keydown(function (e) {
     if (m_OpenAccountMenu !== null && e.key === "Escape") CloseAccountMenu();
+    if (e.key === "Escape" && !$("#LoginSheet").prop("hidden")) CancelSpaceLogin();
   });
 
   /*----Enter and Space activate the div-based buttons of the side bar----*/
-  $(document).on("keydown", "#LeftBoard [role=button], #LeftBoard [role=menuitem], .SeeAll", function (e) {
+  $(document).on("keydown", "#LeftBoard [role=button], #AccountMenu [role=menuitem], .SeeAll", function (e) {
     if (e.key !== "Enter" && e.key !== " " && e.key !== "Spacebar") return;
     e.preventDefault();
     this.click();
   });
+}
+
+/*------SpaceTools sign-in: the app gets a code, the user approves it on spacetools3d.com------*/
+var m_SpaceSignedIn = false;
+
+function SetSpaceSignedIn(bOn) {
+  m_SpaceSignedIn = bOn;
+  $("body").toggleClass("SpaceSignedIn", bOn);
+  $(".EmptyText").each(function () {
+    var kind = $(this).attr("data-kind");
+    $(this).text(bOn ? (kind === "library" ? T("library_empty", "Models you create on SpaceTools3D will show up here.")
+                                           : T("gallery_empty", "Browse ready-to-print models from the SpaceTools3D gallery."))
+                     : (kind === "library" ? T("library_signin", "Sign in with your SpaceTools account to see your models here.")
+                                           : T("gallery_signin", "Sign in with your SpaceTools account to see the SpaceTools showcase here.")));
+  });
+  $(".EmptyAction").text(bOn ? T("open_spacetools", "Open spacetools3d.com") : T("spacetools_sign_in", "Sign in"));
+  if (!bOn) { ShowFeed("library", []); ShowFeed("gallery", []); }
+}
+
+function OnEmptyAction(kind) {
+  if (m_SpaceSignedIn) OpenSpaceTools(kind);
+  else StartSpaceLogin();
+}
+
+function StartSpaceLogin() {
+  $("#LoginCode").text("····-····");
+  $("#LoginStatusText").text(T("spacetools_login_starting", "Getting a code…"));
+  $("#LoginReopen").prop("disabled", true);
+  $("#LoginWait").prop("hidden", false);
+  $("#LoginError").prop("hidden", true);
+  $("#LoginScrim, #LoginSheet").prop("hidden", false);
+  SendSimpleCommand("homepage_spacetools_login");
+}
+
+function ShowSpaceLoginCode(code) {
+  $("#LoginCode").text(code);
+  $("#LoginStatusText").text(T("spacetools_login_waiting", "Waiting for approval…"));
+  $("#LoginReopen").prop("disabled", false);
+  $("#LoginWait").prop("hidden", false);
+  $("#LoginError").prop("hidden", true);
+  $("#LoginScrim, #LoginSheet").prop("hidden", false);
+}
+
+function ShowSpaceLoginError(message) {
+  if ($("#LoginSheet").prop("hidden")) return;
+  $("#LoginErrorText").text(message);
+  $("#LoginWait").prop("hidden", true);
+  $("#LoginError").prop("hidden", false);
+}
+
+function CloseSpaceLogin() { $("#LoginScrim, #LoginSheet").prop("hidden", true); }
+
+function CancelSpaceLogin() {
+  if (!$("#LoginSheet").prop("hidden")) SendSimpleCommand("homepage_spacetools_cancel");
+  CloseSpaceLogin();
 }
 
 function SetOrcaLoginInfo(strAvatar, strName, strAccount) { SetAccountSignedIn("orca", strAvatar, strName, strAccount); }

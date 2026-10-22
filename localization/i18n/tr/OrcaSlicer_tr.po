@@ -40158,3 +40158,67 @@ msgstr "spacetools3d.com'u aç"
 # AI Translated
 msgid "Account"
 msgstr "Hesap"
+
+# AI Translated
+msgid "Sign in"
+msgstr "Giriş yap"
+
+# AI Translated
+msgid "Sign in with SpaceTools"
+msgstr "SpaceTools ile giriş yap"
+
+# AI Translated
+msgid "Approve this code on the page that opened in your browser."
+msgstr "Tarayıcında açılan sayfada bu kodu onayla."
+
+# AI Translated
+msgid "Getting a code…"
+msgstr "Kod alınıyor…"
+
+# AI Translated
+msgid "Waiting for approval…"
+msgstr "Onay bekleniyor…"
+
+# AI Translated
+msgid "Open the page again"
+msgstr "Sayfayı yeniden aç"
+
+# AI Translated
+msgid "No account yet? <a>Create one on spacetools3d.com</a>"
+msgstr "Hesabın yok mu? <a>spacetools3d.com'da oluştur</a>"
+
+# AI Translated
+msgid "Sign in with your SpaceTools account to see your models here."
+msgstr "Modellerini burada görmek için SpaceTools hesabınla giriş yap."
+
+# AI Translated
+msgid "Sign in with your SpaceTools account to see the SpaceTools showcase here."
+msgstr "SpaceTools vitrinini burada görmek için SpaceTools hesabınla giriş yap."
+
+# AI Translated
+msgid "Try again"
+msgstr "Tekrar dene"
+
+# AI Translated
+msgid "SpaceTools did not answer as expected. Try again in a moment."
+msgstr "SpaceTools beklenen yanıtı vermedi. Biraz sonra tekrar dene."
+
+# AI Translated
+msgid "Too many attempts. Wait a few minutes and try again."
+msgstr "Çok fazla deneme yapıldı. Birkaç dakika bekleyip tekrar dene."
+
+# AI Translated
+msgid "Could not reach spacetools3d.com. Check your internet connection."
+msgstr "spacetools3d.com'a ulaşılamadı. İnternet bağlantını kontrol et."
+
+# AI Translated
+msgid "The code has expired. Sign in again to get a new one."
+msgstr "Kodun süresi doldu. Yeni kod için tekrar giriş yap."
+
+# AI Translated
+msgid "Sign-in was cancelled on the website."
+msgstr "Giriş web sitesinde iptal edildi."
+
+# AI Translated
+msgid "This model could not be opened. Try again, or download it from spacetools3d.com."
+msgstr "Bu model açılamadı. Tekrar dene ya da spacetools3d.com'dan indir."
