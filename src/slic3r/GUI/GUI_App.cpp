@@ -470,13 +470,11 @@ public:
         this->SetPosition(pos);
         this->CenterOnScreen();
 
-        scale_font(m_font_version, 1.65f); // only scale this one since it hasnt a preloaded font like Label::Body_24;
-
         m_bg_color = StateColor::darkModeColorFor(wxColour("#FFFFFF"));
         m_fg_color = StateColor::darkModeColorFor(wxColour("#6B6A6A"));
         m_progress_bg_color = StateColor::darkModeColorFor(wxColour("#DFDFDF"));
         m_progress_fg_color = StateColor::darkModeColorFor(wxColour("#7B4FE0"));
-        m_progress_h = FromDIP(6);
+        m_progress_h = FromDIP(4);
         bool dark_mode = m_fg_color != wxColour("#6B6A6A");
         wxSize sz  = m_window->GetClientSize();
         BitmapCache bmp_cache;
@@ -497,29 +495,33 @@ public:
         if (m_logo_bmp.IsOk())
             dc.DrawBitmap(m_logo_bmp, 0, 0, true);
 
+        // SpaceSlicer: the artwork keeps the top 63 % for the logo and the name (make_logos.py splash());
+        // the version sits under the name, the loading step and a slim progress bar near the bottom.
         wxRect rc = wxRect(0, 0, c_sz.GetWidth(), 0);
         dc.SetTextForeground(m_fg_color);
 
         dc.SetFont(m_font_version);
-        rc.y      = c_sz.GetHeight() * 0.72;
+        rc.y      = c_sz.GetHeight() * 0.70;
         rc.height = dc.GetTextExtent(m_text_version).GetHeight();
         dc.DrawLabel(m_text_version, rc, wxALIGN_CENTER);
 
         dc.SetFont(m_font_action);
-        rc.y      = c_sz.GetHeight() * 0.85;
+        rc.y      = c_sz.GetHeight() * 0.83;
         rc.height = dc.GetTextExtent(m_text_action).GetHeight();
         dc.DrawLabel(m_text_action, rc, wxALIGN_CENTER);
 
-        const wxRect progress_rc(0, c_sz.GetHeight() - m_progress_h, c_sz.GetWidth(), m_progress_h);
-                
+        const int bar_x = c_sz.GetWidth() * 0.25;
+        const wxRect progress_rc(bar_x, c_sz.GetHeight() * 0.90, c_sz.GetWidth() - 2 * bar_x, m_progress_h);
+
         dc.SetPen(*wxTRANSPARENT_PEN);
         dc.SetBrush(wxBrush(m_progress_bg_color));
-        dc.DrawRectangle(progress_rc);
+        dc.DrawRoundedRectangle(progress_rc, m_progress_h / 2.0);
 
         const int fill_width = progress_rc.GetWidth() * m_progress * 0.01;
         if (fill_width > 0) {
             dc.SetBrush(wxBrush(m_progress_fg_color));
-            dc.DrawRectangle(0, progress_rc.GetTop(), fill_width, m_progress_h);
+            dc.DrawRoundedRectangle(wxRect(progress_rc.GetLeft(), progress_rc.GetTop(), std::max(fill_width, m_progress_h), m_progress_h),
+                                    m_progress_h / 2.0);
         }
     }
 
@@ -578,8 +580,8 @@ private:
     int      m_progress     = 0;
     int      m_progress_h   = 6;
 
-    wxFont m_font_version = Label::Body_16;
-    wxFont m_font_action  = Label::Body_16;
+    wxFont m_font_version = Label::Body_13;
+    wxFont m_font_action  = Label::Body_14;
 };
 
 #ifdef __linux__

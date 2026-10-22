@@ -14,12 +14,23 @@ async def raster(svg_name, px):
     async with async_playwright() as p:
         b = await p.chromium.launch()
         pg = await b.new_page(viewport={"width": px, "height": px})
-        await pg.set_content('<html><body style="margin:0;background:transparent"><img id="i" src="file://%s" width="%d" height="%d"></body></html>'
-                             % (os.path.join(SVG, svg_name), px, px))
+        # Open the SVG itself: an about:blank page (set_content) may not load file:// images, which left every icon blank.
+        await pg.goto("file://" + os.path.join(SVG, svg_name))
         await pg.wait_for_timeout(200)
-        png = await pg.locator("#i").screenshot(omit_background=True)
+        png = await pg.screenshot(omit_background=True, clip={"x": 0, "y": 0, "width": px, "height": px})
         await b.close()
     return Image.open(BytesIO(png)).convert("RGBA")
+
+def mac_icon(full):
+    """macOS draws icons on Apple's grid: an 824 px body centred in 1024 px with a soft shadow."""
+    from PIL import ImageFilter
+    body = full.resize((824, 824), Image.LANCZOS)
+    out = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+    shadow = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+    shadow.paste((0, 0, 0, 90), (100, 112), body.getchannel("A"))
+    out = Image.alpha_composite(out, shadow.filter(ImageFilter.GaussianBlur(14)))
+    out.alpha_composite(body, (100, 100))
+    return out
 
 def save_png(im, name, size):
     im.resize((size, size), Image.LANCZOS).save(os.path.join(IMG, name))
@@ -37,7 +48,12 @@ async def main():
     full.save(os.path.join(IMG, "OrcaSlicer.ico"), sizes=[(16, 16), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
     full.resize((256, 256), Image.LANCZOS).save(os.path.join(IMG, "OrcaSlicer-mac_256px.ico"), sizes=[(256, 256)])
     full.resize((154, 154), Image.LANCZOS).save(os.path.join(IMG, "OrcaSlicerTitle.ico"), sizes=[(154, 154)])
-    full.save(os.path.join(IMG, "OrcaSlicer.icns"))
+    mac = mac_icon(full)
+    mac.save(os.path.join(IMG, "OrcaSlicer.icns"))
+    mac.save(os.path.join(REPO, "resources", "Icon.icns"))           # the macOS bundle icon (CFBundleIconFile)
+    for name, im in (("OrcaSlicer_192px.png", full), ("OrcaSlicer_32px.png", full)):
+        if im.resize((32, 32)).getchannel("A").getextrema()[1] < 128:
+            raise SystemExit("rasterising failed: %s is empty" % name)
     for src, dst in [("icon_64.svg", "OrcaSlicer.svg"), ("icon_1024.svg", "OrcaSlicer_gradient.svg"), ("icon_grey_1024.svg", "OrcaSlicer_gray.svg"),
                      ("icon_circle_1280.svg", "OrcaSlicer_gradient_circle.svg"), ("icon_transparent_1024.svg", "OrcaSlicer_gradient_narrow.svg"),
                      ("about_light.svg", "OrcaSlicer_about.svg"), ("about_dark.svg", "OrcaSlicer_about_dark.svg"),

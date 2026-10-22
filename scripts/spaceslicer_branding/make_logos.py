@@ -79,14 +79,20 @@ def horizontal(W, H, c1, c2):
     sx = min(1.0, W / total)
     return '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d"><g transform="scale(%.4f)">%s%s</g></svg>' % (W, H, W, H, sx, body, wm)
 
-def splash(size, c1, c2):
-    ic = size * 0.5
+def splash(size, c1, c2, glow):
+    """Start-up window artwork (480 px square). The app draws the version (at 70 %) and the loading step (at 86 %)
+    under it, so the logo and the name stay in the top 63 %."""
+    ic = size * 0.34
+    top = size * 0.13
     inner = icon_svg(int(ic))
-    body = '<g transform="translate(%.2f,%.2f)">%s</g>' % ((size - ic) / 2, size * 0.12, inner[inner.index(">") + 1:-6])
-    px = size * 0.13
+    body = '<g transform="translate(%.2f,%.2f)">%s</g>' % ((size - ic) / 2, top, inner[inner.index(">") + 1:-6])
+    halo = ('<defs><radialGradient id="halo" cx="0.5" cy="0.5" r="0.5"><stop offset="0" stop-color="%s" stop-opacity="0.35"/>'
+            '<stop offset="1" stop-color="%s" stop-opacity="0"/></radialGradient></defs>'
+            '<ellipse cx="%.2f" cy="%.2f" rx="%.2f" ry="%.2f" fill="url(#halo)"/>') % (glow, glow, size / 2, top + ic / 2, ic * 0.95, ic * 0.8)
+    px = size * 0.105
     _, w = text_paths("SpaceSlicer", 0, 0, px, 5)
-    wm, _ = wordmark((size - w) / 2, size * 0.12 + ic + size * 0.18, px, c1, c2)
-    return '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d">%s%s</svg>' % (size, size, size, size, body, wm)
+    wm, _ = wordmark((size - w) / 2, top + ic + size * 0.135, px, c1, c2)
+    return '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d">%s%s%s</svg>' % (size, size, size, size, halo, body, wm)
 
 def write(name, svg):
     open(os.path.join(OUT, name), "w").write(svg)
@@ -100,6 +106,6 @@ write("horizontal_light.svg", horizontal(214, 80, "#1c1726", "#7b4fe0"))   # lig
 write("horizontal_dark.svg", horizontal(214, 80, "#ece8f4", "#b280ff"))    # dark background
 write("about_light.svg", horizontal(560, 125, "#1c1726", "#7b4fe0"))
 write("about_dark.svg", horizontal(560, 125, "#ece8f4", "#b280ff"))
-write("splash_light.svg", splash(480, "#1c1726", "#7b4fe0"))
-write("splash_dark.svg", splash(480, "#ece8f4", "#b280ff"))
+write("splash_light.svg", splash(480, "#1c1726", "#7b4fe0", "#b892ff"))
+write("splash_dark.svg", splash(480, "#ece8f4", "#b280ff", "#7b4fe0"))
 print("ok", OUT)
