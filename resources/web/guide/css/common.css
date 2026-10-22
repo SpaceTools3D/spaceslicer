@@ -182,3 +182,32 @@ input[type="checkbox"]:indeterminate::before {
 
 
 
+
+
+/*==== SpaceSlicer design tokens (the home page palette); css/dark.css redefines them ====*/
+:root
+{
+	--ss-bg: #F6F5F9;
+	--ss-card: #FFFFFF;
+	--ss-sunken: #ECE9F2;
+	--ss-border: #E2DEEA;
+	--ss-field-border: #D3CBE3;
+	--ss-text: #1E1A26;
+	--ss-muted: #6C6579;
+	--ss-violet: #7B4FE0;
+	--ss-violet-text: #6A3FD6;
+	--ss-violet-soft: rgba(123, 79, 224, 0.12);
+	--main-color: #7B4FE0;
+	--main-color-hover: #9A6FF0;
+	--bg-color: #FFFFFF;
+	--border-color: #D3CBE3;
+	--bg-color-secondary: #F6F5F9;
+	--bg-color-alt: #F6F5F9;
+	--focus-bg-box: #F1ECFD;
+	--focus-bg-item: #F1ECFD;
+	--button-bg-normal: #ECE9F2;
+	--button-bg-hover: #E2DEEA;
+	--button-fg-text: #1E1A26;
+	--fg-color-text: #1E1A26;
+	--fg-color-label: #1E1A26;
+}

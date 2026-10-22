@@ -2187,7 +2187,7 @@ void PreferencesDialog::create_items()
     //// ONLINE > Cloud Providers
     g_sizer->Add(create_item_title(_L("Cloud Providers")), 1, wxEXPAND);
 
-    auto item_bambu_cloud     = create_item_bambu_cloud(_L("Enable Bambu Cloud"), _L("Allow logging into Bambu Cloud alongside Orca Cloud. When enabled, a Bambu login section appears on the homepage."));
+    auto item_bambu_cloud     = create_item_bambu_cloud(_L("Enable Bambu Cloud"), _L("Allow signing in to Bambu Cloud for Bambu printers. When enabled, a Bambu Cloud row appears on the home page."));
     g_sizer->Add(item_bambu_cloud);
 
     //// ONLINE > Update & sync

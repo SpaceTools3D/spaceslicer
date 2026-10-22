@@ -1,0 +1,120 @@
+/*==== SpaceSlicer setup wizard: the home page's design on every step (loaded last on each page).
+       Colours come from the --ss-* tokens in common.css (light) and dark.css (dark). ====*/
+*
+{
+	font-family: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "SF Pro Text", Roboto, Ubuntu, "Helvetica Neue", sans-serif;
+	border-color: var(--ss-border);
+}
+
+html, body { background-color: var(--ss-bg); }
+
+body
+{
+	color: var(--ss-text);
+	max-width: none;
+	max-height: none;
+}
+
+#Title { height: auto; min-height: 12%; padding: 26px 32px 6px; }
+
+#Title div
+{
+	font-size: 22px;
+	line-height: 30px;
+	font-weight: 700;
+	letter-spacing: -0.01em;
+	color: var(--ss-text);
+}
+
+#Title div.TitleUnselected { color: var(--ss-muted); font-weight: 600; }
+
+#Content { color: var(--ss-muted); padding: 16px 32px; }
+
+.TextS2, .TextS1 { color: var(--ss-muted); }
+
+a.TextS1, #Content a.TextS1 { color: var(--ss-text); }
+
+.HyperLink { color: var(--ss-violet-text); font-weight: 600; }
+
+#AcceptArea { padding: 0 24px; gap: 10px; border-top: 1px solid var(--ss-border); }
+
+/*---- buttons: the app's pill shapes ----*/
+.ButtonTypeChoice
+{
+	height: 38px;
+	line-height: 38px;
+	padding: 0 22px;
+	border-radius: 10px;
+	font-size: 14px;
+	font-weight: 600;
+	min-width: 96px;
+	box-sizing: border-box;
+}
+
+.ButtonTypeWindow, .ButtonTypeCompact { border-radius: 8px; font-weight: 600; }
+
+.ButtonStyleConfirm        { background: var(--ss-violet); color: #FFFFFF; }
+.ButtonStyleConfirm:hover  { background: var(--main-color-hover); color: #FFFFFF; }
+.ButtonStyleRegular        { background: var(--ss-sunken); color: var(--ss-text); }
+.ButtonStyleRegular:hover  { background: var(--button-bg-hover); color: var(--ss-text); }
+
+/*---- welcome ----*/
+#SlicerIcon img { width: 96px; height: 96px; border-radius: 22px; box-shadow: 0 18px 48px rgba(91, 53, 196, 0.35); }
+#SlicerIcon + #Title, body > #Title:not(:has(div))
+{
+	height: auto;
+	line-height: 34px;
+	padding: 28px 32px 8px;
+	font-size: 28px;
+	font-weight: 700;
+	letter-spacing: -0.015em;
+	color: var(--ss-text);
+}
+#STip { height: auto; padding: 0 64px 32px; font-size: 15px; color: var(--ss-muted); }
+#StartBtn { height: 46px; line-height: 46px; padding: 0 36px; border-radius: 12px; font-size: 15px; }
+
+/*---- region list ----*/
+#RegionList
+{
+	width: 360px;
+	border: 1px solid var(--ss-border);
+	border-radius: 14px;
+	overflow: hidden;
+	background: var(--ss-card);
+}
+.RegionItem { padding-left: 0; color: var(--ss-text); font-weight: 500; }
+.RegionItem + .RegionItem { border-top: 1px solid var(--ss-border); }
+.RegionItem:hover { background-color: var(--ss-sunken); }
+.RegionSelected, .RegionSelected:hover { background-color: var(--ss-violet-soft); color: var(--ss-violet-text); font-weight: 700; }
+#EarthIcon img { width: 120px; min-width: 0; }
+
+/*---- printer / filament browsers ----*/
+.cbr-browser-container
+{
+	border: 1px solid var(--ss-border);
+	border-radius: 12px;
+	overflow: hidden;
+	background: var(--ss-card);
+}
+.cbr-column-title-container { background: var(--ss-sunken); }
+.cbr-search-bar, .cbr-filter-bar { background: transparent; color: var(--ss-text); font-size: 14px; }
+.cbr-filter-bar { border-radius: 8px; background: var(--ss-card); }
+.cbr-search-placeholder, .cbr-filter-placeholder { color: var(--ss-muted); }
+.cbr-content label, .CValues label span, .MItem label { color: var(--ss-text); }
+
+.OneVendorBlock { border-color: var(--ss-border); }
+.BlockBanner { background: var(--ss-sunken); border-radius: 10px; }
+.PrinterBlock { border-radius: 12px; }
+.PrinterBlock:hover { background: var(--ss-sunken); }
+.PName { color: var(--ss-text); }
+.ModelCheckBox.ModelCheckBoxSelected { color: var(--ss-violet-text); }
+#Sidebar { background: var(--ss-card); border-color: var(--ss-border); }
+#Sidebar .SidebarItem:hover { background: var(--ss-sunken); }
+.search { border-radius: 10px; }
+
+/*---- notices and text areas ----*/
+#NoticeBody { background: var(--ss-card); border-radius: 14px; }
+.TextArea1 { background-color: var(--ss-sunken); color: var(--ss-text); border-radius: 10px; }
+
+.ZScrol::-webkit-scrollbar-thumb { background-color: var(--ss-field-border); box-shadow: none; }
+.ZScrol::-webkit-scrollbar-track { background: transparent; box-shadow: none; }

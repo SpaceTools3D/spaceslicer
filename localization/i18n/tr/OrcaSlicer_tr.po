@@ -40222,3 +40222,7 @@ msgstr "Giriş web sitesinde iptal edildi."
 # AI Translated
 msgid "This model could not be opened. Try again, or download it from spacetools3d.com."
 msgstr "Bu model açılamadı. Tekrar dene ya da spacetools3d.com'dan indir."
+
+# AI Translated
+msgid "Allow signing in to Bambu Cloud for Bambu printers. When enabled, a Bambu Cloud row appears on the home page."
+msgstr "Bambu yazıcılar için Bambu Cloud'a giriş yapılmasına izin verir. Etkinleştirildiğinde ana sayfada bir Bambu Cloud satırı görünür."

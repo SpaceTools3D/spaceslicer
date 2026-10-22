@@ -6,26 +6,38 @@
 #include "libslic3r_version.h"
 #include <cctype>
 #include <cstring>
+#include <utility>
 // The macros below are re-checked on every inclusion, so the function needs its own guard.
 #ifndef slic3r_GUI_I18N_brand_
 #define slic3r_GUI_I18N_brand_
 namespace Slic3r { namespace GUI { namespace I18N {
-// SpaceSlicer: the upstream name never shows in the UI. With or without a translation, "OrcaSlicer" / "Orca Slicer"
-// becomes the app name in every text; inside paths and file names (…/OrcaSlicer/…, OrcaSlicer.conf) it stays.
+// SpaceSlicer: the upstream name never shows in the UI. With or without a translation, every text
+// has "OrcaSlicer" / "Orca Slicer" / a lone "Orca" (the app, a bundled test model, a palette) replaced
+// by the app name, "OrcaSliced" by "SpaceSliced", and the upstream cloud ("OrcaCloud" / "Orca Cloud")
+// by a plain "Cloud". Paths and file names keep the original (…/OrcaSlicer/…, OrcaSlicer.conf, *.orca_bundle).
+inline bool brand_word_char(const wxUniChar c) { return c.IsAscii() && (std::isalnum(static_cast<unsigned char>(c.GetValue())) || c == '_'); }
+
 inline wxString brand(wxString s)
 {
-    static const wxString names[] = {wxString("OrcaSlicer"), wxString("Orca Slicer")};
-    for (const wxString &from : names) {
+    if (s.find("Orca") == wxString::npos)
+        return s;
+    const wxString app = wxString::FromUTF8(SLIC3R_APP_NAME);
+    // Longest first, so "Orca Slicer" is not taken for a lone "Orca".
+    const std::pair<wxString, wxString> names[] = {
+        {"OrcaSliced", "SpaceSliced"}, {"OrcaSlicer", app}, {"Orca Slicer", app},
+        {"OrcaCloud", "Cloud"},        {"Orca Cloud", "Cloud"}, {"Orca", app}};
+    for (const auto &[from, to] : names) {
         size_t pos = 0;
         while ((pos = s.find(from, pos)) != wxString::npos) {
             const size_t end = pos + from.length();
-            const bool before = pos > 0 && (s[pos - 1] == '/' || s[pos - 1] == '.' || s[pos - 1] == '-' || s[pos - 1] == '_');
-            const bool after  = end < s.length() && (s[end] == '/' || s[end] == '_' ||
-                                (s[end] == '.' && end + 1 < s.length() && s[end + 1].IsAscii() &&
-                                 std::isalnum(static_cast<unsigned char>(s[end + 1].GetValue()))));
+            // inside a path or file name: …/OrcaSlicer/…, OrcaSlicer.conf, orca-slicer, Orca_x
+            const bool before = pos > 0 && (s[pos - 1] == '/' || s[pos - 1] == '.' || s[pos - 1] == '-' || s[pos - 1] == '_' ||
+                                            brand_word_char(s[pos - 1]));
+            const bool after  = end < s.length() && (s[end] == '/' || s[end] == '_' || brand_word_char(s[end]) ||
+                                (s[end] == '.' && end + 1 < s.length() && brand_word_char(s[end + 1])));
             if (before || after) { pos = end; continue; }
-            s.replace(pos, from.length(), wxString::FromUTF8(SLIC3R_APP_NAME));
-            pos += std::strlen(SLIC3R_APP_NAME);
+            s.replace(pos, from.length(), to);
+            pos += to.length();
         }
     }
     return s;
