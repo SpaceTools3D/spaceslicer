@@ -582,6 +582,8 @@ set(SLIC3R_GUI_SOURCES
     GUI/WebUserLoginDialog.hpp
     GUI/SpaceToolsAccount.cpp
     GUI/SpaceToolsAccount.hpp
+    GUI/BambuStudioImport.cpp
+    GUI/BambuStudioImport.hpp
     GUI/WebViewDialog.cpp
     GUI/WebViewDialog.hpp
     GUI/WebMediaController.hpp

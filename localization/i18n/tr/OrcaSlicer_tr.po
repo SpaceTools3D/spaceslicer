@@ -40226,3 +40226,87 @@ msgstr "Bu model açılamadı. Tekrar dene ya da spacetools3d.com'dan indir."
 # AI Translated
 msgid "Allow signing in to Bambu Cloud for Bambu printers. When enabled, a Bambu Cloud row appears on the home page."
 msgstr "Bambu yazıcılar için Bambu Cloud'a giriş yapılmasına izin verir. Etkinleştirildiğinde ana sayfada bir Bambu Cloud satırı görünür."
+
+# AI Translated
+msgid "Import from Bambu Studio"
+msgstr "Bambu Studio'dan aktar"
+
+# AI Translated
+msgid "Copy profiles and LAN printers from Bambu Studio"
+msgstr "Profilleri ve LAN yazıcılarını Bambu Studio'dan kopyala"
+
+# AI Translated
+msgid "Copies your profiles and LAN printers into this app. Bambu Studio's own files are not changed."
+msgstr "Profillerini ve LAN yazıcılarını bu uygulamaya kopyalar. Bambu Studio'nun kendi dosyaları değişmez."
+
+# AI Translated
+msgid "Choose folder"
+msgstr "Klasör seç"
+
+# AI Translated
+msgid "No Bambu Studio profiles or printers were found here."
+msgstr "Burada Bambu Studio profili ya da yazıcısı bulunamadı."
+
+# AI Translated
+msgid "Printer profiles"
+msgstr "Yazıcı profilleri"
+
+# AI Translated
+msgid "Filament profiles"
+msgstr "Filament profilleri"
+
+# AI Translated
+msgid "Process profiles"
+msgstr "İşlem profilleri"
+
+# AI Translated
+msgid "LAN printers and access codes"
+msgstr "LAN yazıcıları ve erişim kodları"
+
+# AI Translated
+msgid "Bambu Studio was not found on this computer."
+msgstr "Bu bilgisayarda Bambu Studio bulunamadı."
+
+# AI Translated
+msgid "Choose the Bambu Studio data folder"
+msgstr "Bambu Studio veri klasörünü seç"
+
+# AI Translated
+msgid "%1% printer profile imported."
+msgid_plural "%1% printer profiles imported."
+msgstr[0] "%1% yazıcı profili aktarıldı."
+msgstr[1] "%1% yazıcı profili aktarıldı."
+
+# AI Translated
+msgid "%1% filament profile imported."
+msgid_plural "%1% filament profiles imported."
+msgstr[0] "%1% filament profili aktarıldı."
+msgstr[1] "%1% filament profili aktarıldı."
+
+# AI Translated
+msgid "%1% process profile imported."
+msgid_plural "%1% process profiles imported."
+msgstr[0] "%1% işlem profili aktarıldı."
+msgstr[1] "%1% işlem profili aktarıldı."
+
+# AI Translated
+msgid "%1% LAN printer imported. It appears on the Device tab after a restart."
+msgid_plural "%1% LAN printers imported. They appear on the Device tab after a restart."
+msgstr[0] "%1% LAN yazıcısı aktarıldı. Yeniden başlatınca Cihaz sekmesinde görünür."
+msgstr[1] "%1% LAN yazıcısı aktarıldı. Yeniden başlatınca Cihaz sekmesinde görünür."
+
+# AI Translated
+msgid "%1% profile was skipped because one with the same name already exists."
+msgid_plural "%1% profiles were skipped because ones with the same names already exist."
+msgstr[0] "Aynı adda bir profil zaten olduğu için %1% profil atlandı."
+msgstr[1] "Aynı adda profiller zaten olduğu için %1% profil atlandı."
+
+# AI Translated
+msgid "%1% profile could not be used because the profile it is based on is missing."
+msgid_plural "%1% profiles could not be used because the profiles they are based on are missing."
+msgstr[0] "Dayandığı profil bulunmadığı için %1% profil kullanılamadı."
+msgstr[1] "Dayandıkları profiller bulunmadığı için %1% profil kullanılamadı."
+
+# AI Translated
+msgid "There was nothing new to import."
+msgstr "Aktarılacak yeni bir şey yoktu."
