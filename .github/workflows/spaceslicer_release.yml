@@ -78,12 +78,18 @@ jobs:
           done
           ls -la out
           if [ ! -f out/SpaceSlicer_Windows_x64_Setup.exe ] && [ ! -f out/SpaceSlicer_Mac_universal.dmg ]; then
+            # A nightly run with nothing new builds no installers; that is not a failure, there is just nothing to publish.
+            if [ "${{ github.event_name }}" = "workflow_run" ]; then
+              echo "::notice::Run $RUN_ID built no installers; nothing to publish."
+              echo "skip=1" >> "$GITHUB_OUTPUT"; exit 0
+            fi
             echo "::error::No installer was found in run $RUN_ID"; exit 1
           fi
           ver=$(grep 'set(SoftFever_VERSION' version.inc | cut -d '"' -f2)
           echo "ver=$ver" >> "$GITHUB_OUTPUT"
 
       - name: Publish (replaces the previous build of the same version)
+        if: steps.files.outputs.skip != '1'
         run: |
           set -e
           tag="v${{ steps.files.outputs.ver }}"
