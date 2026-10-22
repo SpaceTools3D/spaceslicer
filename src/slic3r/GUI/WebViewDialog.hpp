@@ -123,6 +123,9 @@ public:
     // keeps whatever page the pane holds.
     void set_cloud_mode(bool on, const wxString& url = wxString(), const wxString& page_url = wxString());
 
+    // SpaceTools uses its own website session, independently of printer cloud providers.
+    void set_spacetools_mode(bool on, const wxString& path = wxString());
+
     // True while the OrcaCloud pane exists and is visible.
     bool cloud_mode_active() const { return m_cloud_browser && m_cloud_browser->IsShown(); }
 
@@ -138,6 +141,8 @@ public:
 private:
     void create_browser();
     void create_cloud_browser();
+    void create_spacetools_browser();
+    void OnSpaceToolsWebViewEvent(wxWebViewEvent& evt);
     void reset_browser();
     // Consumes the cloud pane's webview events so they stay off the homepage handlers.
     void OnCloudWebViewEvent(wxWebViewEvent& evt);
@@ -160,6 +165,8 @@ private:
 
     wxWebView* m_browser;
     wxWebView* m_cloud_browser{nullptr};
+    wxWebView* m_spacetools_browser{nullptr};
+    wxString m_spacetools_path;
     wxBoxSizer* m_content_sizer{nullptr};
     wxString m_home_url;
     bool m_reset_on_show{false};

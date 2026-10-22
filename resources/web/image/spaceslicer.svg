@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64"><defs><linearGradient id="bg64" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d1d58"/><stop offset="1" stop-color="#110c22"/></linearGradient></defs><rect x="0.00" y="0.00" width="64.00" height="64.00" rx="14.08" fill="url(#bg64)"/><polygon points="15.44,41.01 32.00,49.29 32.00,53.15 15.44,44.87" fill="#5b35c4"/>
+<polygon points="32.00,49.29 48.56,41.01 48.56,44.87 32.00,53.15" fill="#5b35c4"/>
+<polygon points="15.44,35.67 32.00,43.95 32.00,47.82 15.44,39.54" fill="#5b35c4"/>
+<polygon points="32.00,43.95 48.56,35.67 48.56,39.54 32.00,47.82" fill="#7b4fe0"/>
+<polygon points="15.44,30.34 32.00,38.62 32.00,42.48 15.44,34.20" fill="#7b4fe0"/>
+<polygon points="32.00,38.62 48.56,30.34 48.56,34.20 32.00,42.48" fill="#9a6ff0"/>
+<polygon points="15.44,25.00 32.00,33.28 32.00,37.14 15.44,28.86" fill="#9a6ff0"/>
+<polygon points="32.00,33.28 48.56,25.00 48.56,28.86 32.00,37.14" fill="#b892ff"/>
+<polygon points="32.00,14.88 48.56,23.16 32.00,31.44 15.44,23.16" fill="#d9c4ff"/></svg>

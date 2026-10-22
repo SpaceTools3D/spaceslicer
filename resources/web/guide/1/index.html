@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="Cache-Control" content="max-age=7200" />
-<title>引导_P1</title>
+<title>SpaceSlicer</title>
 <link rel="stylesheet" type="text/css" href="../../include/global.css" />	<!-- ORCA One for all-->
 <link rel="stylesheet" type="text/css" href="../css/common.css" />	
 <link rel="stylesheet" type="text/css" href="../css/dark.css" />		
@@ -12,15 +12,24 @@
 <script type="text/javascript" src="../../include/i18n.js"></script>	
 <script type="text/javascript" src="../js/globalapi.js"></script>	
 <script type="text/javascript" src="../js/common.js"></script>
+<link rel="stylesheet" href="../css/spaceslicer.css" />
 </head>
-<body onLoad="TranslatePage()">
-	<div id="SlicerIcon" style="text-align: center;">
-		<img src="../../image/logo.png"/>
-	</div>
-	<div id="Title" data-i18n="welcome">Welcome to Orca Slicer</div>
-	<div id="STip" data-i18n="setup_intro">Orca Slicer will be set up in several steps. Let's start!</div>
-	<div id="BtnArea">
-	    <a id="StartBtn" class="ButtonStyleConfirm ButtonTypeChoice" href="../11/index.html" data-i18n="get_started">Get Started</a>
-	</div>
+<body class="SpaceWelcome" onLoad="TranslatePage()">
+    <div class="SpaceSetupBrand"><img src="../../image/spaceslicer.svg" alt="" /><span>SpaceSlicer<small>BY SPACETOOLS3D</small></span></div>
+    <div class="SpaceWelcomeBody">
+        <div class="SpaceWelcomeCopy">
+            <div class="SpaceSetupEyebrow">SPACESLICER / <span data-i18n="setup_workspace">YOUR PRINTING WORKSPACE</span></div>
+            <h1 id="Title" data-i18n="welcome">Welcome to SpaceSlicer</h1>
+            <p id="STip" data-i18n="setup_intro">Choose your printer and materials. Your next print starts here.</p>
+            <a id="StartBtn" class="ButtonStyleConfirm ButtonTypeChoice" href="../11/index.html"><span data-i18n="get_started">Get Started</span><span aria-hidden="true">↗</span></a>
+            <p class="SpaceSetupLocal" data-i18n="setup_local">Slice locally. Connect to SpaceTools3D whenever you are ready.</p>
+        </div>
+        <img class="SpaceSetupCube" src="../../image/spaceslicer.svg" alt="" />
+    </div>
+    <div class="SpaceSetupSteps">
+        <div><span>01</span><strong data-i18n="setup_step_printer">Choose your printer</strong></div>
+        <div><span>02</span><strong data-i18n="setup_step_material">Set your materials</strong></div>
+        <div><span>03</span><strong data-i18n="setup_step_ready">Make your first print</strong></div>
+    </div>
 </body>
 </html>

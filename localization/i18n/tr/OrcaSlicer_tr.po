@@ -40110,3 +40110,175 @@ msgstr ""
 
 #~ msgid "Cannot print multiple filaments which have large difference of temperature together. Otherwise, the extruder and nozzle may be blocked or damaged during printing"
 #~ msgstr "Sıcaklık farkı çok büyük olan birden fazla filament aynı anda basılamaz. Aksi takdirde ekstruder ve nozul baskı sırasında tıkanabilir veya zarar görebilir"
+
+# AI Translated
+msgid "Your printing workspace"
+msgstr "Baskı çalışma alanın"
+
+# AI Translated
+msgid "From an idea to your next print."
+msgstr "Fikrinden bir sonraki baskına."
+
+# AI Translated
+msgid "Prepare a model, explore your library, and make something of your own."
+msgstr "Modelini hazırla, kütüphaneni keşfet ve kendi tasarımlarına hayat ver."
+
+# AI Translated
+msgid "Sign in with SpaceTools3D"
+msgstr "SpaceTools3D ile giriş yap"
+
+# AI Translated
+msgid "Your SpaceTools3D account"
+msgstr "SpaceTools3D hesabın"
+
+# AI Translated
+msgid "Model library"
+msgstr "Model kütüphanesi"
+
+# AI Translated
+msgid "Gallery"
+msgstr "Galeri"
+
+# AI Translated
+msgid "Online workspace"
+msgstr "Çevrimiçi çalışma alanı"
+
+# AI Translated
+msgid "Printer connections"
+msgstr "Yazıcı bağlantıları"
+
+# AI Translated
+msgid "Optional accounts for printer services and preset sync."
+msgstr "Yazıcı hizmetleri ve profil eşitleme için isteğe bağlı hesaplar."
+
+# AI Translated
+msgid "No account needed for slicing"
+msgstr "Dilimlemek için hesap gerekmez"
+
+# AI Translated
+msgid "Start with a model and make it print-ready."
+msgstr "Bir modelle başla, baskıya hazırla."
+
+# AI Translated
+msgid "Find your models on SpaceTools3D."
+msgstr "SpaceTools3D’de modellerini bul."
+
+# AI Translated
+msgid "Pick up where you left off."
+msgstr "Kaldığın yerden devam et."
+
+# AI Translated
+msgid "Your next project starts here."
+msgstr "Bir sonraki projen burada başlıyor."
+
+# AI Translated
+msgid "Open a 3MF project or start a new print."
+msgstr "Bir 3MF projesi aç veya yeni bir baskıya başla."
+
+# AI Translated
+msgid "SpaceTools3D could not be loaded. Check your connection and try again."
+msgstr "SpaceTools3D yüklenemedi. Bağlantını kontrol edip yeniden dene."
+
+# AI Translated
+msgid "Online features are unavailable in Stealth Mode. You can still slice locally."
+msgstr "Gizli modda çevrimiçi özellikler kullanılamaz. Yerel olarak dilimlemeye devam edebilirsin."
+
+# AI Translated
+msgid "Welcome to SpaceSlicer"
+msgstr "SpaceSlicer’a hoş geldin"
+
+# AI Translated
+msgid "Choose your printer and materials. Your next print starts here."
+msgstr "Yazıcını ve malzemelerini seç. Bir sonraki baskın burada başlıyor."
+
+# AI Translated
+msgid "YOUR PRINTING WORKSPACE"
+msgstr "BASKI ÇALIŞMA ALANIN"
+
+# AI Translated
+msgid "Slice locally. Connect to SpaceTools3D whenever you are ready."
+msgstr "Yerel olarak dilimle. Hazır olduğunda SpaceTools3D’ye bağlan."
+
+# AI Translated
+msgid "Choose your printer"
+msgstr "Yazıcını seç"
+
+# AI Translated
+msgid "Set your materials"
+msgstr "Malzemelerini ayarla"
+
+# AI Translated
+msgid "Make your first print"
+msgstr "İlk baskını yap"
+
+# AI Translated
+msgid "Please be aware that these plugins are not developed or maintained by SpaceTools3D. They should be used at your own discretion and risk."
+msgstr "Bu eklentiler SpaceTools3D tarafından geliştirilmez veya bakımı yapılmaz. Bunları kullanmak senin kararın ve sorumluluğundadır."
+
+# AI Translated
+msgid "SpaceSlicer will terminate because of running out of memory. It may be a bug. It will be appreciated if you report the issue to our team."
+msgstr "SpaceSlicer hafızasının yetersiz olması nedeniyle sonlandırılacak. Bir hata olabilir. Sorunu ekibimize bildirirseniz seviniriz."
+
+# AI Translated
+msgid "SpaceSlicer will terminate because of a localization error. It will be appreciated if you report the specific scenario this issue happened."
+msgstr "SpaceSlicer bir yerelleştirme hatası nedeniyle sonlandırılacak. Bu sorunun gerçekleştiği spesifik senaryoyu bildirirseniz memnun oluruz."
+
+# AI Translated
+msgid "SpaceSlicer got an unhandled exception: %1%"
+msgstr "SpaceSlicer'da işlenmeyen bir istisna oluştu: %1%"
+
+# AI Translated
+msgid "SpaceSlicer requires the Microsoft WebView2 Runtime to operate certain features.\nClick Yes to install it now."
+msgstr "SpaceSlicer, belirli özellikleri çalıştırmak için Microsoft WebView2 Runtime gerektirir.\nŞimdi yüklemek için Evet'e tıklayın."
+
+# AI Translated
+msgid "The Microsoft WebView2 Runtime could not be installed.\nSome features, including the setup wizard, may appear blank until it is installed.\nPlease install it manually from %1% and restart SpaceSlicer."
+msgstr "Microsoft WebView2 Runtime yüklenemedi.\nKurulum sihirbazı dahil bazı özellikler, yüklenene kadar boş görünebilir.\nLütfen %1% adresinden elle yükleyin ve SpaceSlicer'ı yeniden başlatın."
+
+# AI Translated
+msgid "New version of SpaceSlicer"
+msgstr "SpaceSlicer’ın yeni versiyonu"
+
+# AI Translated
+msgid "SpaceSlicer needs an update"
+msgstr "SpaceSlicer'ın güncellenmesi gerekiyor"
+
+# AI Translated
+msgid "The SpaceSlicer configuration file may be corrupted and cannot be parsed.\nSpaceSlicer has attempted to recreate the configuration file.\nPlease note, application settings will be lost, but printer profiles will not be affected."
+msgstr "SpaceSlicer konfigürasyon dosyası bozulmuş olabilir ve ayrıştırılamayabilir.\nSpaceSlicer, konfigürasyon dosyasını yeniden oluşturmayı denedi.\nLütfen dikkat edin, uygulama ayarları kaybolacak, ancak yazıcı profilleri etkilenmeyecek."
+
+# AI Translated
+msgid "The version of SpaceSlicer is too low and needs to be updated to the latest version before it can be used normally."
+msgstr "SpaceSlicer'ın sürümü çok düşük ve normal şekilde kullanılabilmesi için en son sürüme güncellenmesi gerekiyor."
+
+# AI Translated
+msgid "Please try updating SpaceSlicer and then try again."
+msgstr "Lütfen SpaceSlicer'ı güncellemeyi deneyin ve ardından tekrar deneyin."
+
+# AI Translated
+msgid "The certificate has expired. Please check the time settings or update SpaceSlicer and try again."
+msgstr "Sertifikanın süresi doldu. Lütfen zaman ayarlarını kontrol edin veya SpaceSlicer'ı güncelleyip tekrar deneyin."
+
+# AI Translated
+msgid "Internal error. Please try upgrading the firmware and SpaceSlicer version. If the issue persists, contact support."
+msgstr "Dahili hata. Lütfen ürün yazılımını ve SpaceSlicer sürümünü yükseltmeyi deneyin. Sorun devam ederse desteğe başvurun."
+
+# AI Translated
+msgid "To use SpaceSlicer with Bambu Lab printers, you need to enable LAN mode and Developer mode on your printer.\n\nPlease go to your printer's settings and:\n1. Turn on LAN mode\n2. Enable Developer mode\n\nDeveloper mode allows the printer to work exclusively through local network access, enabling full functionality with SpaceSlicer."
+msgstr "SpaceSlicer'ı Bambu Lab yazıcılarıyla kullanmak için yazıcınızda LAN modunu ve Geliştirici modunu etkinleştirmeniz gerekir.\n\nLütfen yazıcınızın ayarlarına gidin ve:\n1. LAN modunu açın\n2. Geliştirici modunu etkinleştirin\n\nGeliştirici modu, yazıcının yalnızca yerel ağ erişimi üzerinden çalışmasına olanak tanıyarak SpaceSlicer ile tam işlevsellik sağlar."
+
+# AI Translated
+msgid "The user presets folder could not be locked, so nothing was migrated. Another SpaceSlicer instance may be saving presets; try again later from Help > Migrate Filament Presets."
+msgstr "Kullanıcı ön ayarları klasörü kilitlenemediği için hiçbir şey taşınmadı. Başka bir SpaceSlicer örneği ön ayarları kaydediyor olabilir; daha sonra Yardım > Filament Ön Ayarlarını Taşı menüsünden tekrar deneyin."
+
+# AI Translated
+msgid "Switching SpaceSlicer to language %s failed."
+msgstr "SpaceSlicer'ın %s diline geçirilmesi başarısız oldu."
+
+# AI Translated
+msgid "SpaceSlicer - Switching language failed"
+msgstr "SpaceSlicer - Dil değiştirme başarısız oldu"
+
+# AI Translated
+msgid "Cloud agent is not available. Please restart SpaceSlicer and try again."
+msgstr "Bulut aracısı kullanılamıyor. Lütfen SpaceSlicer'ı yeniden başlatıp yeniden deneyin."

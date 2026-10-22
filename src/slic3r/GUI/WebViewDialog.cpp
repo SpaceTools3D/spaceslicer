@@ -26,6 +26,7 @@
 #include <string>
 #include <nlohmann/json.hpp>
 #include <functional>
+#include <initializer_list>
 #include <cstddef>
 #include <wx/dialog.h>
 #include <wx/sizer.h>
@@ -85,6 +86,22 @@ static json home_page_strings()
         {"clear_all", _u8L("Clear all")},
         {"remove", _u8L("Remove")},
         {"open_containing_folder", _u8L("Open Containing Folder")},
+        {"space_workspace", _u8L("Your printing workspace")},
+        {"space_headline", _u8L("From an idea to your next print.")},
+        {"space_intro", _u8L("Prepare a model, explore your library, and make something of your own.")},
+        {"space_sign_in", _u8L("Sign in with SpaceTools3D")},
+        {"space_account", _u8L("Your SpaceTools3D account")},
+        {"space_library", _u8L("Model library")},
+        {"space_gallery", _u8L("Gallery")},
+        {"space_online", _u8L("Online workspace")},
+        {"space_connections", _u8L("Printer connections")},
+        {"space_connections_note", _u8L("Optional accounts for printer services and preset sync.")},
+        {"space_local", _u8L("No account needed for slicing")},
+        {"space_new_hint", _u8L("Start with a model and make it print-ready.")},
+        {"space_library_hint", _u8L("Find your models on SpaceTools3D.")},
+        {"space_recent_hint", _u8L("Pick up where you left off.")},
+        {"space_empty", _u8L("Your next project starts here.")},
+        {"space_empty_hint", _u8L("Open a 3MF project or start a new print.")},
     };
 }
 
@@ -383,6 +400,88 @@ static void open_cloud_url_externally(const wxString& url)
     wxGetApp().CallAfter([url] { wxLaunchDefaultBrowser(url); });
 }
 
+void WebViewPanel::create_spacetools_browser()
+{
+    m_spacetools_browser = WebView::CreateWebView(this, wxEmptyString);
+#ifdef __linux__
+    if (auto* view = static_cast<WebKitWebView*>(m_spacetools_browser->GetNativeBackend())) {
+        const auto cookies_path = boost::filesystem::path(data_dir() + "/cache/spacetools_cookies.db");
+        auto* cookies = webkit_web_context_get_cookie_manager(webkit_web_view_get_context(view));
+        webkit_cookie_manager_set_persistent_storage(cookies, cookies_path.c_str(), WEBKIT_COOKIE_PERSISTENT_STORAGE_SQLITE);
+    }
+#endif
+    // Consume every event here: remote website messages must never reach the local
+    // homepage's file/printer command dispatcher or the Orca session handoff.
+    for (const auto& type : {wxEVT_WEBVIEW_NAVIGATING, wxEVT_WEBVIEW_NAVIGATED, wxEVT_WEBVIEW_LOADED,
+                            wxEVT_WEBVIEW_TITLE_CHANGED, wxEVT_WEBVIEW_ERROR, wxEVT_WEBVIEW_NEWWINDOW,
+                            wxEVT_WEBVIEW_SCRIPT_MESSAGE_RECEIVED})
+        m_spacetools_browser->Bind(type, &WebViewPanel::OnSpaceToolsWebViewEvent, this);
+    m_spacetools_browser->Hide();
+    m_content_sizer->Add(m_spacetools_browser, wxSizerFlags().Expand().Proportion(1));
+}
+
+void WebViewPanel::OnSpaceToolsWebViewEvent(wxWebViewEvent& evt)
+{
+    if (!m_spacetools_browser || evt.GetEventObject() != m_spacetools_browser)
+        return;
+    const auto type = evt.GetEventType();
+    const wxString url = evt.GetURL();
+    const wxString origin = http_origin_of(url);
+    if (type == wxEVT_WEBVIEW_NAVIGATING) {
+        if (origin != "https://spacetools3d.com" && url != "about:blank") {
+            evt.Veto();
+            // WebKitGTK cannot identify every main-frame redirect. Reject off-site
+            // frames/redirects too; only explicit top-level links leave the app.
+            if (origin.StartsWith("https://") && cloud_navigation_is_top_level(evt))
+                open_cloud_url_externally(url);
+        }
+    } else if (type == wxEVT_WEBVIEW_NEWWINDOW) {
+        evt.Veto();
+        if (origin == "https://spacetools3d.com")
+            m_spacetools_browser->LoadURL(url);
+        else if (origin.StartsWith("https://"))
+            open_cloud_url_externally(url);
+    } else if (type == wxEVT_WEBVIEW_ERROR && url == m_spacetools_browser->GetCurrentURL()) {
+        m_info->ShowMessage(_L("SpaceTools3D could not be loaded. Check your connection and try again."), wxICON_WARNING);
+    }
+}
+
+void WebViewPanel::set_spacetools_mode(bool on, const wxString& path)
+{
+    if (on) {
+        if (wxGetApp().app_config->get_stealth_mode()) {
+            m_info->ShowMessage(_L("Online features are unavailable in Stealth Mode. You can still slice locally."), wxICON_INFORMATION);
+            return;
+        }
+        // Routes are app-defined. Never accept a URL, token or password from page messages.
+        if (!path.empty() && path != "/login" && path != "/stl-library" && path != "/gallery" && path != "/")
+            return;
+        if (!m_spacetools_browser)
+            create_spacetools_browser();
+        if (m_cloud_browser)
+            m_cloud_browser->Hide();
+        if (!path.empty()) {
+            m_spacetools_path = path;
+            m_spacetools_browser->LoadURL("https://spacetools3d.com" + path);
+        }
+        m_spacetools_browser->Show();
+        m_info->Dismiss();
+        RunScript("SetSpaceToolsMode(true)");
+    } else if (m_spacetools_browser) {
+        // Retain the website's own cookie session when returning to local projects.
+        if (wxGetApp().app_config->get_stealth_mode()) {
+            m_spacetools_browser->Stop();
+            m_spacetools_browser->Destroy();
+            m_spacetools_browser = nullptr;
+            m_spacetools_path.clear();
+        } else {
+            m_spacetools_browser->Hide();
+        }
+        RunScript("SetSpaceToolsMode(false)");
+    }
+    apply_cloud_layout(on || cloud_mode_active());
+}
+
 // Consumed on the cloud view so it never reaches the homepage handlers. {web} pages stay in the
 // pane; every other site (OAuth providers included) opens in the system browser (guide §3).
 void WebViewPanel::OnCloudWebViewEvent(wxWebViewEvent& evt)
@@ -540,6 +639,8 @@ void WebViewPanel::cloud_signed_out(const wxString& signout_url)
 void WebViewPanel::set_cloud_mode(bool on, const wxString& url, const wxString& page_url)
 {
     if (on) {
+        if (m_spacetools_browser)
+            m_spacetools_browser->Hide();
         // load_cloud_url records the origin from whatever it loads, including the plain cloud
         // fallback used when `url` is empty.
         if (!m_cloud_browser) {
@@ -569,13 +670,14 @@ void WebViewPanel::set_cloud_mode(bool on, const wxString& url, const wxString& 
         // again (guide §10). Nothing is cleared here.
         m_cloud_browser->Hide();
     }
-    apply_cloud_layout(on && m_cloud_browser != nullptr);
+    apply_cloud_layout((on && m_cloud_browser != nullptr) || (m_spacetools_browser && m_spacetools_browser->IsShown()));
 }
 
 void WebViewPanel::reset_browser()
 {
     // Rebuild both views the same way, keeping the cloud pane's open/closed state.
     const bool cloud_on = m_cloud_browser && m_cloud_browser->IsShown();
+    const bool space_on = m_spacetools_browser && m_spacetools_browser->IsShown();
 
     m_browser->Destroy(); // also removes it from the sizer
     create_browser();
@@ -591,7 +693,14 @@ void WebViewPanel::reset_browser()
         m_cloud_seed_url.clear();
     }
 
-    apply_cloud_layout(cloud_on);
+    if (m_spacetools_browser) {
+        m_spacetools_browser->Destroy();
+        m_spacetools_browser = nullptr;
+        create_spacetools_browser();
+        m_spacetools_browser->LoadURL("https://spacetools3d.com" + m_spacetools_path);
+        m_spacetools_browser->Show(space_on);
+    }
+    apply_cloud_layout(cloud_on || space_on);
 }
 
 bool WebViewPanel::Show(bool show)
@@ -1009,6 +1118,8 @@ void WebViewPanel::OnDocumentLoaded(wxWebViewEvent& evt)
     // A reloaded homepage loses its cloud-mode class; restore it if the pane is open.
     if (m_cloud_browser && m_cloud_browser->IsShown())
         RunScript("SetCloudMode(true)");
+    else if (m_spacetools_browser && m_spacetools_browser->IsShown())
+        RunScript("SetSpaceToolsMode(true)");
     UpdateState();
     SendCloudProvidersInfo();
 }
@@ -1045,6 +1156,29 @@ void WebViewPanel::OnNewWindow(wxWebViewEvent& evt)
 
 void WebViewPanel::OnScriptMessage(wxWebViewEvent& evt)
 {
+    if (evt.GetEventObject() != m_browser ||
+        m_browser->GetCurrentURL().BeforeFirst('?') != m_home_url.BeforeFirst('?'))
+        return;
+    const json message = json::parse(evt.GetString().utf8_string(), nullptr, false);
+    if (message.is_object() && message.contains("command") && message["command"].is_string()) {
+        const std::string command = message["command"].get<std::string>();
+        if (command == "homepage_spacetools_login") {
+            set_spacetools_mode(true, "/login");
+            return;
+        }
+        if (command == "homepage_spacetools_library") {
+            set_spacetools_mode(true, "/stl-library");
+            return;
+        }
+        if (command == "homepage_spacetools_gallery") {
+            set_spacetools_mode(true, "/gallery");
+            return;
+        }
+        if (command == "homepage_spacetools_close") {
+            set_spacetools_mode(false);
+            return;
+        }
+    }
     BOOST_LOG_TRIVIAL(trace) << __FUNCTION__ << ": " << evt.GetString().ToUTF8().data();
     // update login status
     if (m_LoginUpdateTimer == nullptr) {
