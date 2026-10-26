@@ -125,7 +125,13 @@ jobs:
             $deps = (Split-Path "${{ github.workspace }}/${{ inputs.cache-path }}").Replace('\', '/')
             # -l compiles with Visual Studio's clang-cl and -x builds with Ninja; --msvc --msbuild is cl under the Visual Studio generator.
             $flags = if ("${{ inputs.compiler }}" -eq "clang") { "-l", "-x" } else { "--msvc", "--msbuild" }
-            .\build_win.bat -d --arch ${{ inputs.arch }} --deps-dir $deps @flags
+            # SpaceSlicer: build errors also become annotations, readable without the raw log
+            .\build_win.bat -d --arch ${{ inputs.arch }} --deps-dir $deps @flags 2>&1 | Tee-Object -FilePath deps_build_log.txt
+            $code = $LASTEXITCODE
+            if ($code -ne 0) {
+              Select-String -Path deps_build_log.txt -Pattern '(: (fatal )?error |CMake Error|FAILED:|error MSB)' | Select-Object -First 40 | ForEach-Object { Write-Output "::error::$($_.Line.Trim())" }
+              exit $code
+            }
         shell: pwsh
 
       - name: Build on Mac ${{ inputs.arch }}
