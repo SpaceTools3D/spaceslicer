@@ -79,7 +79,7 @@ void SpaceToolsAccount::start_login()
         .header("Accept", "application/json")
         .timeout_connect(10)
         .timeout_max(20)
-        .set_post_body("{}")
+        .set_post_body(std::string("{}"))
         .on_complete([this, alive](std::string body, unsigned /*status*/) {
             wxGetApp().CallAfter([this, alive, body]() {
                 if (!*alive)
@@ -195,7 +195,7 @@ void SpaceToolsAccount::logout()
             .header("Authorization", "Bearer " + tok)
             .header("Accept", "application/json")
             .timeout_max(10)
-            .set_post_body("{}")
+            .set_post_body(std::string("{}"))
             .on_complete([](std::string, unsigned) {})
             .on_error([](std::string, std::string, unsigned) {})
             .perform();
@@ -287,7 +287,7 @@ void SpaceToolsAccount::open_library_item(const std::string& id, const std::stri
         .header("Accept", "application/json")
         .timeout_connect(10)
         .timeout_max(20)
-        .set_post_body("{}")
+        .set_post_body(std::string("{}"))
         .on_complete([alive, title](std::string body, unsigned) {
             wxGetApp().CallAfter([alive, title, body]() {
                 if (!*alive)
