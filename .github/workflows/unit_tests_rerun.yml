@@ -3,30 +3,31 @@ name: Unit Tests (rerun from a build)
 # SpaceSlicer: run the unit tests again from the test package of an earlier "Build all" run,
 # without building again, and print the failing tests as annotations on this run.
 on:
-  workflow_dispatch:
-    inputs:
-      run-id:
-        description: Run id of the "Build all" run that built the tests
-        required: true
-        type: string
-      artifact:
-        description: Test artifact name in that run (e.g. <sha>-tests-linux-x86_64)
-        required: true
-        type: string
-      os:
-        description: Runner
-        required: false
-        type: string
-        default: ubuntu-24.04
+  # Starts when .github/test-rerun.json changes on a branch: {"run-id": "...", "artifact": "...", "os": "ubuntu-24.04"}.
+  # (A hand-started workflow has to exist on the default branch; this one can live on a work branch.)
+  push:
+    paths:
+      - '.github/test-rerun.json'
 
 permissions:
   contents: read
   actions: read
 
 jobs:
+  read:
+    runs-on: ubuntu-24.04
+    outputs:
+      cfg: ${{ steps.cfg.outputs.cfg }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: .github
+      - id: cfg
+        run: echo "cfg=$(jq -c . .github/test-rerun.json)" >> "$GITHUB_OUTPUT"
   unit_tests:
     name: Unit Tests (rerun)
-    runs-on: ${{ inputs.os }}
+    runs-on: ${{ fromJSON(needs.read.outputs.cfg).os || 'ubuntu-24.04' }}
+    needs: read
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -42,8 +43,8 @@ jobs:
       - name: Restore Test Artifact
         uses: actions/download-artifact@v8
         with:
-          name: ${{ inputs.artifact }}
-          run-id: ${{ inputs.run-id }}
+          name: ${{ fromJSON(needs.read.outputs.cfg).artifact }}
+          run-id: ${{ fromJSON(needs.read.outputs.cfg)['run-id'] }}
           github-token: ${{ github.token }}
       - uses: lukka/get-cmake@latest
         with:
