@@ -1,0 +1,62 @@
+name: Unit Tests (rerun from a build)
+
+# SpaceSlicer: run the unit tests again from the test package of an earlier "Build all" run,
+# without building again, and print the failing tests as annotations on this run.
+on:
+  workflow_dispatch:
+    inputs:
+      run-id:
+        description: Run id of the "Build all" run that built the tests
+        required: true
+        type: string
+      artifact:
+        description: Test artifact name in that run (e.g. <sha>-tests-linux-x86_64)
+        required: true
+        type: string
+      os:
+        description: Runner
+        required: false
+        type: string
+        default: ubuntu-24.04
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  unit_tests:
+    name: Unit Tests (rerun)
+    runs-on: ${{ inputs.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          sparse-checkout: |
+            .github
+            scripts
+            tests
+            resources
+      - name: Apt-Install Dependencies
+        if: runner.os == 'Linux'
+        uses: ./.github/actions/apt-install-deps
+      - name: Restore Test Artifact
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ inputs.artifact }}
+          run-id: ${{ inputs.run-id }}
+          github-token: ${{ github.token }}
+      - uses: lukka/get-cmake@latest
+        with:
+          cmakeVersion: "~4.3.0"
+          useLocalCache: true
+          useCloudCache: true
+      - name: Unpackage and Run Unit Tests
+        timeout-minutes: 20
+        shell: bash
+        run: |
+          tar -xvf build_tests.tar > /dev/null
+          scripts/run_unit_tests.sh build/tests Release
+      - name: Failed tests as annotations
+        if: ${{ failure() }}
+        shell: bash
+        run: python3 scripts/ctest_failure_annotations.py ctest_results.xml || true
